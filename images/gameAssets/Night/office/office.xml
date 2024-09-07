@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="office.png" width="2002" height="1540">
+  <SubTexture name="Office0001" x="1" y="1"  width="2000" height="768" frameX="-0" frameY="-0" frameWidth="2000" frameHeight="768"/>
+  <SubTexture name="Red0001" x="1" y="771"  width="2000" height="768" frameX="-0" frameY="-0" frameWidth="2000" frameHeight="768"/>
+</TextureAtlas>

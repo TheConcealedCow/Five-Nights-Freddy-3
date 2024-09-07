@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="line.png" width="626" height="182">
+  <SubTexture name="Vcr0009" x="1" y="1"  width="621" height="1" frameX="-0" frameY="-29" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0020" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0003" x="1" y="4"  width="622" height="2" frameX="-0" frameY="-9" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0001" x="1" y="8"  width="622" height="3" frameX="-0" frameY="-1" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0007" x="1" y="13"  width="622" height="3" frameX="-0" frameY="-21" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0012" x="1" y="18"  width="622" height="3" frameX="-0" frameY="-9" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0019" x="1" y="23"  width="622" height="3" frameX="-0" frameY="-1" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0002" x="1" y="28"  width="622" height="4" frameX="-0" frameY="-3" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0010" x="1" y="34"  width="622" height="4" frameX="-0" frameY="-1" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0011" x="1" y="40"  width="622" height="4" frameX="-0" frameY="-3" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0004" x="1" y="46"  width="622" height="5" frameX="-0" frameY="-10" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0005" x="1" y="53"  width="621" height="5" frameX="-0" frameY="-14" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0006" x="1" y="60"  width="622" height="5" frameX="-0" frameY="-18" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0008" x="1" y="67"  width="622" height="5" frameX="-0" frameY="-25" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0015" x="1" y="74"  width="622" height="6" frameX="-0" frameY="-17" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0016" x="1" y="82"  width="622" height="11" frameX="-0" frameY="-13" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0014" x="1" y="95"  width="622" height="15" frameX="-0" frameY="-13" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0017" x="1" y="112"  width="622" height="19" frameX="-0" frameY="-9" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0013" x="1" y="133"  width="622" height="20" frameX="-0" frameY="-10" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0018" x="1" y="155"  width="622" height="26" frameX="-0" frameY="-4" frameWidth="1024" frameHeight="30"/>
+  <SubTexture name="Vcr0021" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0022" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0023" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0024" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0025" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0026" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0027" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0028" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0029" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0030" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+  <SubTexture name="Vcr0031" x="624" y="1"  width="1" height="1" frameX="-0" frameY="-0" frameWidth="1" frameHeight="1"/>
+</TextureAtlas>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="6.png" width="686" height="296">
+  <SubTexture name="Bright0001" x="1" y="1"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+  <SubTexture name="Bright0002" x="344" y="1"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+  <SubTexture name="Bright0003" x="1" y="75"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+  <SubTexture name="Bright0004" x="344" y="75"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+  <SubTexture name="Bright0005" x="1" y="149"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+  <SubTexture name="Bright0006" x="344" y="149"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+  <SubTexture name="Five0001" x="1" y="223"  width="341" height="72" frameX="-0" frameY="-0" frameWidth="341" frameHeight="72"/>
+</TextureAtlas>

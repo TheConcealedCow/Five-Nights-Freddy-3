@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="puppet.png" width="2307" height="1468">
+  <SubTexture name="Left0001" x="1" y="1"  width="767" height="732" frameX="-16" frameY="-36" frameWidth="800" frameHeight="768"/>
+  <SubTexture name="LookRight0001" x="770" y="1"  width="767" height="732" frameX="-16" frameY="-36" frameWidth="800" frameHeight="768"/>
+  <SubTexture name="LookRight0002" x="1539" y="1"  width="767" height="732" frameX="-16" frameY="-36" frameWidth="800" frameHeight="768"/>
+  <SubTexture name="LookRight0003" x="1" y="735"  width="767" height="732" frameX="-16" frameY="-36" frameWidth="800" frameHeight="768"/>
+  <SubTexture name="Right0001" x="770" y="735"  width="767" height="732" frameX="-16" frameY="-36" frameWidth="800" frameHeight="768"/>
+</TextureAtlas>

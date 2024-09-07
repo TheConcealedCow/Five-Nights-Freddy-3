@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="progress.png" width="27" height="41">
+  <SubTexture name="Prog0001" x="1" y="1"  width="25" height="39" frameX="-20" frameY="-2" frameWidth="165" frameHeight="50"/>
+  <SubTexture name="Prog0002" x="1" y="1"  width="25" height="39" frameX="-42" frameY="-2" frameWidth="165" frameHeight="50"/>
+  <SubTexture name="Prog0003" x="1" y="1"  width="25" height="39" frameX="-64" frameY="-2" frameWidth="165" frameHeight="50"/>
+  <SubTexture name="Prog0004" x="1" y="1"  width="25" height="39" frameX="-87" frameY="-2" frameWidth="165" frameHeight="50"/>
+  <SubTexture name="Prog0005" x="1" y="1"  width="25" height="39" frameX="-109" frameY="-2" frameWidth="165" frameHeight="50"/>
+</TextureAtlas>

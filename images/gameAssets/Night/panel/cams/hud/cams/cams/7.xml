@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="7.png" width="3308" height="1956">
+  <SubTexture name="Chica0001" x="1" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Chica0002" x="828" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Chica0003" x="1655" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Flicker0001" x="2482" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Flicker0002" x="1" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Flicker0003" x="828" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringA0001" x="1655" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringA0002" x="2482" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringA0003" x="1" y="1305"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringB0001" x="828" y="1305"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringB0002" x="1655" y="1305"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringB0003" x="2482" y="1305"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Chica0004" x="828" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Flicker0004" x="1" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringA0004" x="2482" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringB0004" x="1655" y="1305"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+</TextureAtlas>

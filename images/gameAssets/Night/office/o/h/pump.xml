@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="pump.png" width="596" height="314">
+  <SubTexture name="Pump0001" x="1" y="1"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+  <SubTexture name="Pump0002" x="150" y="1"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+  <SubTexture name="Pump0003" x="299" y="1"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+  <SubTexture name="Pump0004" x="448" y="1"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+  <SubTexture name="Pump0005" x="1" y="158"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+  <SubTexture name="Pump0006" x="150" y="158"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+  <SubTexture name="Pump0007" x="299" y="158"  width="147" height="155" frameX="-0" frameY="-0" frameWidth="147" frameHeight="155"/>
+</TextureAtlas>

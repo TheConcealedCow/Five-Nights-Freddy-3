@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="fWalk.png" width="1694" height="1621">
+  <SubTexture name="Fall0011" x="1" y="1"  width="255" height="128" frameX="-32" frameY="-285" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0010" x="258" y="1"  width="256" height="137" frameX="-30" frameY="-276" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0009" x="516" y="1"  width="262" height="159" frameX="-25" frameY="-254" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0008" x="780" y="1"  width="267" height="187" frameX="-19" frameY="-226" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0007" x="1049" y="1"  width="267" height="221" frameX="-12" frameY="-192" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0006" x="1318" y="1"  width="275" height="255" frameX="-6" frameY="-158" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0005" x="1" y="140"  width="278" height="291" frameX="-1" frameY="-122" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0004" x="281" y="162"  width="282" height="328" frameX="-0" frameY="-85" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0003" x="565" y="190"  width="282" height="358" frameX="-1" frameY="-55" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0002" x="849" y="224"  width="278" height="378" frameX="-5" frameY="-35" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0009" x="1129" y="258"  width="288" height="384" frameX="-0" frameY="-29" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Fall0001" x="1419" y="258"  width="274" height="385" frameX="-8" frameY="-28" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0011" x="1" y="433"  width="276" height="386" frameX="-7" frameY="-27" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0010" x="279" y="492"  width="283" height="384" frameX="-3" frameY="-29" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0007" x="564" y="550"  width="283" height="388" frameX="-4" frameY="-25" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0012" x="849" y="604"  width="271" height="388" frameX="-12" frameY="-25" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0008" x="1122" y="644"  width="286" height="385" frameX="-1" frameY="-28" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0013" x="1410" y="645"  width="265" height="391" frameX="-18" frameY="-22" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0006" x="1" y="821"  width="275" height="393" frameX="-10" frameY="-20" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0014" x="278" y="878"  width="258" height="394" frameX="-24" frameY="-19" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0005" x="538" y="940"  width="265" height="397" frameX="-17" frameY="-16" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0001" x="805" y="994"  width="245" height="402" frameX="-33" frameY="-11" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0004" x="1052" y="1031"  width="255" height="402" frameX="-23" frameY="-11" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0002" x="1309" y="1038"  width="244" height="403" frameX="-32" frameY="-10" frameWidth="310" frameHeight="413"/>
+  <SubTexture name="Walk0003" x="1" y="1216"  width="246" height="404" frameX="-29" frameY="-9" frameWidth="310" frameHeight="413"/>
+</TextureAtlas>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="10.png" width="1654" height="1304">
+  <SubTexture name="Cam0001" x="1" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Special0001" x="828" y="1"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringA0001" x="1" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="SpringB0001" x="828" y="653"  width="825" height="650" frameX="-0" frameY="-0" frameWidth="825" frameHeight="650"/>
+</TextureAtlas>

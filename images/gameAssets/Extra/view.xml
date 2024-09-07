@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="view.png" width="1733" height="1451">
+  <SubTexture name="View0004" x="1" y="1"  width="325" height="539" frameX="-333" frameY="-196" frameWidth="1024" frameHeight="768"/>
+  <SubTexture name="View0003" x="328" y="1"  width="340" height="567" frameX="-0" frameY="-0" frameWidth="340" frameHeight="567"/>
+  <SubTexture name="View0007" x="670" y="1"  width="373" height="590" frameX="-0" frameY="-0" frameWidth="373" frameHeight="590"/>
+  <SubTexture name="View0006" x="1045" y="1"  width="687" height="679" frameX="-35" frameY="-89" frameWidth="768" frameHeight="768"/>
+  <SubTexture name="View0005" x="1" y="570"  width="366" height="708" frameX="-183" frameY="-42" frameWidth="768" frameHeight="768"/>
+  <SubTexture name="View0001" x="369" y="593"  width="301" height="759" frameX="-230" frameY="-9" frameWidth="768" frameHeight="768"/>
+  <SubTexture name="View0002" x="672" y="682"  width="696" height="768" frameX="-27" frameY="-0" frameWidth="768" frameHeight="768"/>
+</TextureAtlas>

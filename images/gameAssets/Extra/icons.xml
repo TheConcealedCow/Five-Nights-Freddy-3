@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="icons.png" width="1106" height="604">
+  <SubTexture name="Mini0001" x="1" y="1"  width="400" height="300" frameX="-0" frameY="-0" frameWidth="400" frameHeight="300"/>
+  <SubTexture name="Mini0002" x="403" y="1"  width="400" height="300" frameX="-0" frameY="-0" frameWidth="400" frameHeight="300"/>
+  <SubTexture name="Mini0003" x="805" y="1" width="300" height="400" rotated="true"  frameX="-0" frameY="-0" frameWidth="400" frameHeight="300"/>
+  <SubTexture name="Mini0004" x="1" y="303"  width="400" height="300" frameX="-0" frameY="-0" frameWidth="400" frameHeight="300"/>
+  <SubTexture name="Mini0005" x="403" y="303"  width="400" height="300" frameX="-0" frameY="-0" frameWidth="400" frameHeight="300"/>
+</TextureAtlas>

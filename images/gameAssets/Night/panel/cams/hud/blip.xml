@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="blip.png" width="2302" height="992">
+  <SubTexture name="Blip0005" x="1" y="1"  width="825" height="388" frameX="-0" frameY="-167" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Blip0002" x="828" y="1"  width="825" height="455" frameX="-0" frameY="-101" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Blip0001" x="1655" y="1" width="646" height="825" rotated="true"  frameX="-0" frameY="-4" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Blip0003" x="1" y="391"  width="825" height="483" frameX="-0" frameY="-93" frameWidth="825" frameHeight="650"/>
+  <SubTexture name="Blip0004" x="828" y="458"  width="825" height="533" frameX="-0" frameY="-78" frameWidth="825" frameHeight="650"/>
+</TextureAtlas>

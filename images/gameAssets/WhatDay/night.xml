@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="night.png" width="512" height="318">
+  <SubTexture name="1" x="1" y="1"  width="201" height="104" frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+  <SubTexture name="2" x="204" y="1"  width="201" height="104" frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+  <SubTexture name="3" x="407" y="1" width="104" height="201" rotated="true"  frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+  <SubTexture name="4" x="1" y="107"  width="201" height="104" frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+  <SubTexture name="5" x="204" y="107"  width="201" height="104" frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+  <SubTexture name="6" x="1" y="213"  width="201" height="104" frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+  <SubTexture name="7" x="204" y="213"  width="201" height="104" frameX="-0" frameY="-0" frameWidth="201" frameHeight="104"/>
+</TextureAtlas>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="radar.png" width="222" height="145">
+  <SubTexture name="Radar0001" x="1" y="1"  width="65" height="47" frameX="-77" frameY="-20" frameWidth="225" frameHeight="90"/>
+  <SubTexture name="Radar0002" x="68" y="1"  width="81" height="59" frameX="-69" frameY="-15" frameWidth="225" frameHeight="90"/>
+  <SubTexture name="Radar0003" x="151" y="1" width="70" height="97" rotated="true"  frameX="-60" frameY="-9" frameWidth="225" frameHeight="90"/>
+  <SubTexture name="Radar0004" x="1" y="62"  width="111" height="82" frameX="-53" frameY="-3" frameWidth="225" frameHeight="90"/>
+</TextureAtlas>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="hide.png" width="936" height="459">
+  <SubTexture name="Hide0019" x="1" y="1"  width="13" height="4" frameX="-257" frameY="-245" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0018" x="16" y="1"  width="21" height="55" frameX="-249" frameY="-243" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0017" x="39" y="1"  width="30" height="299" frameX="-240" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0016" x="71" y="1"  width="39" height="338" frameX="-231" frameY="-31" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0015" x="112" y="1"  width="49" height="362" frameX="-221" frameY="-31" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0014" x="163" y="1"  width="57" height="371" frameX="-213" frameY="-32" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0013" x="222" y="1"  width="66" height="379" frameX="-204" frameY="-31" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0012" x="290" y="1"  width="74" height="386" frameX="-196" frameY="-31" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0011" x="366" y="1"  width="81" height="392" frameX="-189" frameY="-32" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0010" x="449" y="1"  width="88" height="427" frameX="-182" frameY="-32" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0009" x="539" y="1"  width="93" height="428" frameX="-177" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0008" x="634" y="1"  width="97" height="449" frameX="-173" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0007" x="733" y="1"  width="100" height="455" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0001" x="835" y="1"  width="100" height="457" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0002" x="835" y="1"  width="100" height="457" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0003" x="835" y="1"  width="100" height="457" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0004" x="835" y="1"  width="100" height="457" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0005" x="835" y="1"  width="100" height="457" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+  <SubTexture name="Hide0006" x="835" y="1"  width="100" height="457" frameX="-170" frameY="-33" frameWidth="270" frameHeight="550"/>
+</TextureAtlas>
