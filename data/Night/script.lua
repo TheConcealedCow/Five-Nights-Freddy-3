@@ -522,7 +522,7 @@ systems = {
 		shownErr = false
 	},
 	video = {
-		prog = -10,
+		prog = 0,
 		
 		inCamTime = 0,
 		
