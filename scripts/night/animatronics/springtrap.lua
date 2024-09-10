@@ -64,8 +64,8 @@ function onCreate()
 	r.ai = getMainVar('AI');
 	r.hyper = getMainVar('cheats').hyper;
 	
-	--local spawnCam = 10 - Random(5);
-	local spawnCam = 3;
+	local spawnCam = 10 - Random(5);
+	--local spawnCam = 3;
 	setSpringCam(spawnCam);
 	
 	runTimer('springResetAggro', pl(15), 0);
@@ -262,10 +262,10 @@ local upCam = {
 					end
 				end
 			end
-		elseif getMainVar('blackout').alph > 250 then -- move to got you 2 setSpringCam(200);
+		elseif getMainVar('blackout').alph > 250 then
 			setVar('gotYou', 2);
 			
-			setMainVar('xCam', 1500);
+			setMainVar('xCam', 1488);
 		end
 	end
 };
@@ -407,7 +407,7 @@ function makeMove()
 				if newCam == 0 then
 					r.action = action;
 				else
-					if newCam < 25 then return; end -- 
+					--if newCam < 25 then return; end -- 
 					
 					setSpringCam(newCam);
 					
