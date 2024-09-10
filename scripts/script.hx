@@ -130,9 +130,7 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	
 	'hideOnFin' => function(o) {
 		var obj = LuaUtils.getObjectDirectly(o, false);
-		obj.animation.finishCallback = function() {
-			obj.alpha = 0;
-		}
+		obj.animation.finishCallback = function() { obj.alpha = 0; }
 	}
 	
 	'grpVol' => function(g, v) getVar(g).volume = v

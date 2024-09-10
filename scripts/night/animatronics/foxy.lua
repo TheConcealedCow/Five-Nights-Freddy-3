@@ -9,7 +9,7 @@ local night = 1;
 function onCreate()
 	night = min(getMainVar('curNight'), 5);
 	
-	if night >= 2 then
+	if night > 1 then
 		r.chance = chancesPerNight[night];
 	end
 end

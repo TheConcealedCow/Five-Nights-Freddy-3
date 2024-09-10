@@ -30,7 +30,7 @@ local lastNear = 0;
 nearPhase = 0;
 
 local viewTrig = false;
-local viewingLittle = false;
+viewingLittle = false;
 
 local sysTrig = false;
 viewingCams = false;
@@ -75,11 +75,11 @@ cameraProps = {};
 ventProps = {};
 
 cheats = {
-	fast = false,
-	vent = false,
-	hyper = false,
-	noCams = false
-}
+	fast = false, -- Fast Nights
+	radar = false, -- Radar
+	hyper = false, -- Hyper
+	noErr = false -- No Errors
+};
 
 blackout = {
 	started = false,
@@ -203,8 +203,6 @@ function create()
 			sysCam.scroll.x = x;
 			camCam.scroll.x = x;
 			marionCam.scroll.x = x;
-			
-			//updateBoxes(x);
 		}
 		
 		createCallback('setFinFunc', function(o, f, ?p) {
@@ -231,10 +229,6 @@ function create()
 		
 		createGlobalCallback('setCamProp', function(c, n, a, v) {
 			parentLua.call('setInCam', [c, n, a, v]);
-		});
-		
-		createGlobalCallback('springStatic', function() {
-			parentLua.call('staticAddMove', []);
 		});
 	]]);
 	
@@ -278,6 +272,8 @@ function create()
 	runTimer('twen', pl(20), 0);
 	runTimer('min', pl(60), 0);
 	
+	setVar('gotYou', 0);
+	
 	if curNight > 1 then
 		if curNight < 7 then
 			local v = timeSubVent[curNight];
@@ -314,7 +310,7 @@ local fg = {
 	ended = true
 };
 foxyPos = {1284 - 586, 450 + 318};
-function makeOffice()
+function makeOffice() -- buttons are 120, arcade buttons are 190
 	makeLuaSprite('bg', office .. 'backdrop');
 	setCam('bg');
 	addLuaSprite('bg');
@@ -325,7 +321,7 @@ function makeOffice()
 	addLuaSprite('springWindow');
 	setAlpha('springWindow', 0.00001);
 	
-	makeLuaSprite('mangleWindow', office .. 'o/a/b/mangleWindow', 1118, 512); -- -100, then to 1
+	makeLuaSprite('mangleWindow', office .. 'o/a/b/mangleWindow', 1118, 512);
 	addToOffsets('mangleWindow', 83, 103);
 	setCam('mangleWindow');
 	addLuaSprite('mangleWindow');
@@ -378,6 +374,7 @@ function makeOffice()
 	addOffset('springHide', 'hide', 269, 275);
 	playAnim('springHide', 'hide', true);
 	setCam('springHide');
+	hideOnFin('springHide');
 	addLuaSprite('springHide');
 	setAlpha('springHide', 0.00001);
 	
@@ -425,10 +422,22 @@ function makeOffice()
 	addLuaSprite('bbOffice');
 	setAlpha('bbOffice', 0.00001);
 	
+	makeAnimatedLuaSprite('bigScare', 'gameAssets/Jumpscares/sp/bigScare');
+	addAnimationByPrefix('bigScare', 'scare', 'Scare', 30, false);
+	playAnim('bigScare', 'scare', true);
+	hideOnFin('bigScare');
+	setCam('bigScare');
+	addLuaSprite('bigScare');
+	setAlpha('bigScare', 0.00001);
+	
 	makeLuaSprite('scrnCen', 'active', xCam, 382 - 15);
 	setCam('scrnCen');
 	addLuaSprite('scrnCen');
 	setVis('scrnCen', false);
+	
+	makeLuaSprite('noseBox', HITBOX, 672 - 6, 270 - 6);
+	scaleObject('noseBox', 13, 13);
+	setCam('noseBox');
 end
 
 function makePaperpals()
@@ -516,7 +525,7 @@ systems = {
 	audio = {
 		prog = 0,
 		
-		lureNum = 0,
+		lureNum = 1,
 		lureTime = 0,
 		
 		shownErr = false
@@ -674,6 +683,15 @@ function makeViewHud()
 	playAnim('sealProg', 'prog', true);
 	addToGrp('sealProg', 'ventCamsMark');
 	setAlpha('sealProg', 0.00001);
+	
+	
+	makeLuaSprite('bbDouble', HITBOX, 1217 - 21, 324 - 21);
+	scaleObject('bbDouble', 42, 42);
+	setCam('bbDouble', 'camCam');
+	
+	makeLuaSprite('puppetDouble', HITBOX, 1809 - 18, 241 - 23);
+	scaleObject('puppetDouble', 37, 46);
+	setCam('puppetDouble', 'camCam');
 	
 	
 	makeAnimatedLuaSprite('audErrView', viewHud .. 'err/audio', 1190, 143 + 16);
@@ -967,6 +985,21 @@ function makeMarkers()
 		makeLuaSprite(n, viewHud .. 'cams/markers/names/cams/' .. i, name[1] + (i >= 10 and 1 or 2), name[2] + 2);
 		addToGrp(n, grp);
 	end
+	
+	makeAnimatedLuaSprite('lureSpr', viewHud .. 'cams/markers/radar', 200, 200);
+	addAnimationByPrefix('lureSpr', 'lure', 'Radar', 1, false);
+	addOffset('lureSpr', 'lure', 108, 43);
+	setFrameRate('lureSpr', 'lure', 1.8);
+	playAnim('lureSpr', 'lure', true);
+	hideOnFin('lureSpr');
+	addToGrp('lureSpr', 'mainCamsMark');
+	
+	if cheats.radar then
+		makeLuaSprite('spPos', viewHud .. 'spPos', 200, 200);
+		addToOffsets('spPos', 6, 6);
+		setCam('spPos', 'camCam');
+		addLuaSprite('spPos');
+	end
 end
 
 function makeHud()
@@ -1032,8 +1065,13 @@ function onUpdatePost(e)
 	
 	if marionActive then blackout.setTime = 100; end
 	
-	moveCam(e, ti);
+	if cheats.noErr then
+		
+	end
 	
+	updateGotYou(e, ti);
+	moveCam(e, ti);
+	updateReboot(e, ti);
 	updateSystems(e, ti);
 	updateStatic(e, ti);
 	updateBreathing(e, ti);
@@ -1064,6 +1102,33 @@ function onUpdatePost(e)
 	return Function_StopLua;
 end
 
+local startedGot = false;
+function updateGotYou(e, t)
+	local got = getVar('gotYou'); -- FINISH THISSSSSSSSSSSSSSSSSSSSSSSSSS MAKE THE SCARE HAPPEN SO I CAN BE DONE WITH THIS PART OF THE PORT
+	if got == 0 then return; end
+	
+	if not startedGot then
+		startedGot = true;
+		runTimer('startScream', pl(2 / 6));
+	end
+	
+	hitMid();
+	
+	if got == 1 then
+		if xCam > 512 then
+			xCam = max(xCam - (20 * t), 512);
+		end
+		
+		local vent = systems.vent;
+		vent.prog = 0;
+		vent.offNum = 0;
+	end
+	
+	if blackout.alph > 0 then
+		blackout.alph = max(blackout.alph - (10 * t), 0);
+	end
+end
+
 function updateShake(t)
 	local sc = scrollShake;
 	
@@ -1090,6 +1155,10 @@ function staticAddMove()
 	setAlpha('static', 1);
 	
 	updateACam();
+end
+
+function setStaticProp(p, e)
+	static[p] = e;
 end
 
 function updateStatic(e, t)
@@ -1170,22 +1239,24 @@ function moveCam(e, t)
 	elseif viewingAPanel then
 		updatePanel(e, t);
 	elseif frameActive then
-		local camSpd = -16; -- so we can ignore the first one :)
-		local m = camMouseX();
-		
-		for i = 1, #camMoves do
-			if m > camMoves[i].x then
-				camSpd = camMoves[i].p;
-			else break; end
-		end
-		
-		if marionActive then camSpd = camSpd / 4; end
-		
-		xCam = bound(xCam + (camSpd * t), 512, 1488);
-		
-		if lastCamX ~= xCam then
-			lastCamX = xCam;
-			checkHitSides();
+		if getVar('gotYou') == 0 then
+			local camSpd = -16; -- so we can ignore the first one :)
+			local m = camMouseX();
+			
+			for i = 1, #camMoves do
+				if m > camMoves[i].x then
+					camSpd = camMoves[i].p;
+				else break; end
+			end
+			
+			if marionActive then camSpd = camSpd / 4; end
+			
+			xCam = bound(xCam + (camSpd * t), 512, 1488);
+			
+			if lastCamX ~= xCam then
+				lastCamX = xCam;
+				checkHitSides();
+			end
 		end
 		
 		runHaxeFunction('updateScroll', {xCam});
@@ -1222,8 +1293,25 @@ function officeClick()
 	end
 end
 
+local clickDark = 0;
 function checkHitOffice() -- fred nose, dark, and numpad
+	if mouseOverlaps('noseBox', 'mainCam') then
+		doSound('PartyFavorraspyPart_AC01__3', 1, 'honkSnd');
+		
+		return;
+	end
 	
+	if curNight == 5 then
+		if mouseOverlaps('dark', 'mainCam') then
+			clickDark = clickDark + 1;
+			if waitingDouble and clickDark >= 2 then
+				clickDark = 0;
+				--switchState('RWQFSFASXC');
+			end
+		else
+			clickDark = 0;
+		end
+	end
 end
 
 function updatePanel(e, t)
@@ -1242,51 +1330,6 @@ local curHover = 'audioSys';
 local beepSec = 0;
 local progSec = 0;
 function updateSys(e, t)
-	if rebooting then
-		rebootSec = rebootSec + e;
-		while rebootSec >= rebootTime do
-			rebootSec = rebootSec - rebootTime;
-			rebootProg = rebootProg + (1 + Random(2));
-			
-			if rebootProg >= 10 then
-				local sys = systems;
-				rebootProg = 0;
-				canCloseSys = true;
-				rebooting = false;
-				
-				if rebootAll then
-					rebootAll = false;
-					sys.audio.prog = 0;
-					sys.video.prog = 0;
-					sys.vent.prog = 0;
-				else
-					if hoverNum == 1 then
-						sys.audio.prog = 0;
-					elseif hoverNum == 2 then
-						sys.video.prog = 0;
-					else
-						sys.vent.prog = 0;
-					end
-				end
-				
-				setAlpha('sysProg', 0);
-			end
-		end
-		
-		progSec = progSec + e;
-		while progSec >= 1 do
-			progSec = progSec - 1;
-			setFrameRate('sysProg', 'prog', (2 + Random(10)) * 0.6);
-		end
-		
-		beepSec = beepSec + e;
-		while beepSec >= 2 do
-			beepSec = beepSec - 2;
-			
-			doSound('wait', 1, 'sysSnd', false, 'channel8');
-		end
-	end
-	
 	if not rebooting then
 		for i = 1, #toCheckHover do
 			local check = toCheckHover[i];
@@ -1351,6 +1394,53 @@ function rebootASystem(i)
 	canCloseSys = false;
 end
 
+function updateReboot(e, t)
+	if rebooting then
+		rebootSec = rebootSec + e;
+		while rebootSec >= rebootTime do
+			rebootSec = rebootSec - rebootTime;
+			rebootProg = rebootProg + (1 + Random(2));
+			
+			if rebootProg >= 10 then
+				local sys = systems;
+				rebootProg = 0;
+				canCloseSys = true;
+				rebooting = false;
+				
+				if rebootAll then
+					rebootAll = false;
+					sys.audio.prog = 0;
+					sys.video.prog = 0;
+					sys.vent.prog = 0;
+				else
+					if hoverNum == 1 then
+						sys.audio.prog = 0;
+					elseif hoverNum == 2 then
+						sys.video.prog = 0;
+					else
+						sys.vent.prog = 0;
+					end
+				end
+				
+				setAlpha('sysProg', 0);
+			end
+		end
+		
+		progSec = progSec + e;
+		while progSec >= 1 do
+			progSec = progSec - 1;
+			setFrameRate('sysProg', 'prog', (2 + Random(10)) * 0.6);
+		end
+		
+		beepSec = beepSec + e;
+		while beepSec >= 2 do
+			beepSec = beepSec - 2;
+			
+			doSound('wait', 1, 'sysSnd', false, 'channel8');
+		end
+	end
+end
+
 local totTapCam = 0;
 local camTapped = 0;
 local toggleCooled = true;
@@ -1379,46 +1469,7 @@ function updateView(e, t)
 			return;
 		end
 		
-		if toggleCooled and mouseOverlaps('selVent', 'camCam') then
-			toggleCooled = false;
-			runTimer('coolToggle', pl(2 / 6));
-			
-			doSound('select', 1, 'toggleSnd');
-			
-			toggleView();
-			
-			return;
-		end
-		
-		local tappedACam = false;
-		local beg = (lookingVents and 11 or 1);
-		local en = (lookingVents and 15 or 10);
-		
-		for i = beg, en do
-			if mouseOverlaps('mark' .. i, 'camCam') then
-				tappedACam = true;
-				
-				if beg > 10 then
-					if camTapped == i then
-						totTapCam = totTapCam + 1;
-						if totTapCam >= 2 and waitingDouble then
-							totTapCam = 0;
-							
-							trySealCam(i);
-							break;
-						end
-					else
-						camTapped = i;
-						totTapCam = 1;
-					end
-				end
-				
-				trySwitchCam(i);
-				
-				break;
-			end
-		end
-		if not tappedACam then totTapCam = 0; end
+		mouseClickView();
 	end
 	
 	ventProgUpdate(e, t);
@@ -1427,6 +1478,68 @@ function updateView(e, t)
 	if up then up(e, t); end
 	
 	setSoundVolume('statSnd', (static.A / (curNight == 1 and 8 or 5)) / 100);
+end
+
+function mouseClickView()
+	if toggleCooled and mouseOverlaps('selVent', 'camCam') then
+		toggleCooled = false;
+		runTimer('coolToggle', pl(2 / 6));
+		
+		doSound('select', 1, 'toggleSnd');
+		
+		toggleView();
+		
+		return;
+	end
+	
+	if not lookingVents and mouseOverlaps('selAud', 'camCam') then
+		local aud = systems.audio;
+		if aud.lureNum == 7 and aud.prog > -10 then
+			aud.lureNum = 4;
+			aud.prog = aud.prog - AI;
+			
+			setFrame('audInd', 0);
+			setAlpha('audInd', 1);
+			setAlpha('selAud', 0);
+			setAlpha('audTxt', 0);
+			
+			doSound('echo/' .. getRandomInt(1, 3), 1, 'lureSnd');
+			
+			tryLure(curCam);
+			
+			return;
+		end
+	end
+	
+	local tappedACam = false;
+	local beg = (lookingVents and 11 or 1);
+	local en = (lookingVents and 15 or 10);
+	
+	for i = beg, en do
+		if mouseOverlaps('mark' .. i, 'camCam') then
+			tappedACam = true;
+			
+			if beg > 10 then
+				if camTapped == i then
+					totTapCam = totTapCam + 1;
+					if totTapCam >= 2 and waitingDouble then
+						totTapCam = 0;
+						
+						trySealCam(i);
+						break;
+					end
+				else
+					camTapped = i;
+					totTapCam = 1;
+				end
+			end
+			
+			trySwitchCam(i);
+			
+			break;
+		end
+	end
+	if not tappedACam then totTapCam = 0; end
 end
 
 function toggleView()
@@ -1565,6 +1678,17 @@ function camBlip()
 	setAlpha('static', 1);
 end
 
+function tryLure(i)
+	local mark = getPos('mark' .. i);
+	setPos('lureSpr', mark[1] + 29, mark[2] + 19);
+	playAnim('lureSpr', 'lure', true);
+	setAlpha('lureSpr', 1);
+	
+	if getRandomInt(1, 7) > 1 then
+		callOnLuas('getLured', {i});
+	end
+end
+
 function startHallucinating()
 	for i = 1, 15 do
 		if i < 11 then
@@ -1693,6 +1817,8 @@ end
 function closeSys()
 	inAPanel = false;
 	viewingLittle = false;
+	
+	callOnLuas('onCloseSys');
 	
 	doSound('lever2', 1, 'panelSnd');
 	doSound('stop', 1, 'statSnd');
@@ -1827,6 +1953,11 @@ function updateBlackout(e, t)
 	setAlpha('blackCam', blackout.alph / 255);
 end
 
+function springBlackout()
+	blackout.alph = 249;
+	blackout.started = true;
+end
+
 function updateOffice(e, t)
 	fg.blinkTime = fg.blinkTime - t;
 	fg.sndTime = fg.sndTime - t;
@@ -1857,7 +1988,6 @@ function updateSystems(e, t)
 	if aud.prog <= -10 then
 		if not aud.shownErr then
 			aud.shownErr = true;
-			
 			setAlpha('errAudSys', 1);
 			setAlpha('audErrView', 1);
 		end
@@ -1869,8 +1999,8 @@ function updateSystems(e, t)
 	
 	if aud.lureNum < 7 then
 		aud.lureTime = aud.lureTime + e;
-		while aud.lureTime >= 1.5 do
-			aud.lureTime = aud.lureTime - 1.5;
+		while aud.lureTime >= .5 do
+			aud.lureTime = aud.lureTime - .5; -- 1.5
 			
 			setFrame('audInd', aud.lureNum);
 			aud.lureNum = min(aud.lureNum + 1, 7);
@@ -1959,10 +2089,6 @@ function updateSystems(e, t)
 		
 		stopHallucinating();
 	end
-end
-
-function tryLure(i)
-	
 end
 
 function calcAI()
@@ -2180,6 +2306,10 @@ local timers = {
 		picRand = (getRandomBool() and '2' or '1');
 	end,
 	
+	['startScream'] = function()
+		doSound('scream3', 1, 'scareSpring');
+	end,
+	
 	['coolToggle'] = function()
 		toggleCooled = true;
 	end,
@@ -2203,12 +2333,16 @@ function onTimerCompleted(t)
 end
 
 function cacheSounds()
-	for i = 1, 2 do
-		precacheSound('crank' .. i);
-		precacheSound('lever' .. i);
-	end
-	
 	for i = 1, 7 do
+		if i < 3 then
+			precacheSound('crank' .. i);
+			precacheSound('lever' .. i);
+		end
+		
+		if i < 4 then
+			precacheSound('echo/' .. i);
+		end
+		
 		precacheSound('walk/' .. i);
 	end
 	
@@ -2226,4 +2360,6 @@ function cacheSounds()
 	precacheSound('garble1');
 	
 	precacheSound('stop');
+	
+	precacheSound('PartyFavorraspyPart_AC01__3');
 end
