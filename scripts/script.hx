@@ -30,6 +30,8 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	'switchState' => function(name) nextState(name)
     'exitGame' => function() exit()
 	
+	'stopGame' => function() stopGame()
+	
 	'bound' => function(x, a, b) return FlxMath.bound(x, a, b)
 	'wrap' => function(x, a, b) return FlxMath.wrap(x, a, b)
 	'lerp' => function(x, y, a) return FlxMath.lerp(x, y, a)
@@ -94,6 +96,7 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	},
 	
 	'setExists' => function(o, e) LuaUtils.getObjectDirectly(o).exists = e
+	'setActive' => function(o, a) LuaUtils.getObjectDirectly(o).active = a
 	
 	'setAlpha' => function(o, a) {
 		var obj = LuaUtils.getObjectDirectly(o);
@@ -136,8 +139,6 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	'grpVol' => function(g, v) getVar(g).volume = v
 	'addToGrp' => function(o, g) getVar(g).add(LuaUtils.getObjectDirectly(o, false))
 	'removeFromGrp' => function(o, g) getVar(g).remove(LuaUtils.getObjectDirectly(o, false))
-	
-	'killSounds' => function() killSounds()
 	
 	'doSound' => function(s, ?v, ?t, ?l, ?g) {
 		if (s == null || s.length == 0) return;
@@ -293,6 +294,28 @@ function resize(?width:Int, ?height:Int) {
 		FlxG.game.x = FlxG.game.y = 0;
 		
 		Application.current.window.x += xChange;
+	}
+}
+
+function stopGame() {
+	for (obj in game.members) if (Std.isOfType(obj, FlxSprite) && obj.active) obj.active = false; // copy pasted this part from Rudy!!
+	FlxTimer.globalManager.forEach(function(tmr:FlxTimer) tmr.active = false);
+	
+	killSounds();
+}
+
+function killSounds() {
+	// manually destroying all of the sounds cuz `FlxG.sound.destroy(true);` crashes the game
+	while (FlxG.sound.list.members.length > 0) {
+		final sound:FlxSound = FlxG.sound.list.members[FlxG.sound.list.members.length - 1];
+
+		if (sound == null) {
+			FlxG.sound.list.members.remove(sound);
+			continue;
+		}
+
+		sound.stop();
+		FlxG.sound.list.members.pop();
 	}
 }
 

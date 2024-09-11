@@ -76,6 +76,15 @@ function onCloseCams()
 	end
 end
 
+function stopEverything()
+	setAlpha('mangleWindow', 0);
+	stopSound('mangleSnd');
+	
+	cancelTimer('mangleGo');
+	cancelTween('mangleUP');
+	cancelTween('mangleDOWN');
+end
+
 function onHour(h)
 	curHour = h;
 end

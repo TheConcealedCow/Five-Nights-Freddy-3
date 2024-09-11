@@ -68,6 +68,13 @@ function despawnBB(t)
 	setVis('bbPeek', false);
 end
 
+function stopEverything()
+	despawnBB(false);
+	
+	playAnim('bbOffice', 'idle', true);
+	setAlpha('bbOffice', 0);
+end
+
 function onHour(h)
 	curHour = h;
 end

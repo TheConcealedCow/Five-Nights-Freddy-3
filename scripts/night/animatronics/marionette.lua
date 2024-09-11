@@ -120,7 +120,6 @@ function doScare()
 	r.appearTime = 1000;
 	
 	setCamProp('cameraProps', 8, 'curIn', '');
-	
 	setMainVar('marionActive', true);
 	
 	setAlpha('puppetHead', 1);
@@ -150,6 +149,12 @@ function puppetEndLook(re)
 		r.lookPhase = 2;
 		playAnim('puppetHead', 'right');
 	end
+end
+
+function stopEverything()
+	r.fullStop = true;
+	setAlpha('puppetHead', 0);
+	setMainVar('marionActive', false);
 end
 
 function onHour(h)

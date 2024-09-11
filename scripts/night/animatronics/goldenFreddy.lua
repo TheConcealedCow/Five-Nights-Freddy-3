@@ -116,6 +116,16 @@ function doScare()
 	doSound('scream3', 1, 'scareSfx');
 end
 
+function stopEverything()
+	r.isWalking = false;
+	r.willSpawn = false;
+	
+	r.tryingScare = false;
+	
+	setAlpha('fredScare', 0);
+	playAnim('fredScare', 'unFin', true);
+end
+
 function onHour(h)
 	curHour = h;
 	

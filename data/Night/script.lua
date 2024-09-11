@@ -1,3 +1,9 @@
+--[[
+	// TODO //
+	
+	- minigame trigger
+	- night start
+]]
 local night = 'gameAssets/night/';
 local hud = night .. 'hud/';
 local office = night .. 'office/';
@@ -16,8 +22,13 @@ local max = math.max;
 local ins = table.insert;
 local floor = math.floor;
 
+local sv = 'FNAF3';
+
 local frameActive = false;
 local canMove = true;
+
+local doing6AM = false;
+local canUpdateWin = false;
 
 local canMute = false;
 
@@ -40,7 +51,7 @@ local clickOffice = true;
 local seeDown = true;
 local seeRight = false;
 
-local curHour = 3;
+local curHour = 12;
 curNight = 7;
 curSealed = 0;
 
@@ -119,6 +130,12 @@ function create()
 		mainCam.antialiasing = false;
 		setVar('mainCam', mainCam);
 		
+		var marionCam = FlxG.cameras.add(new FlxCamera(0, 0, 1024, 768), false);
+		marionCam.bgColor = 0x00000000;
+		marionCam.pixelPerfectRender = true;
+		marionCam.antialiasing = false;
+		setVar('marionCam', marionCam);
+		
 		var hudCam = FlxG.cameras.add(new FlxCamera(0, 0, 1024, 768), false);
 		hudCam.bgColor = 0x00000000;
 		hudCam.pixelPerfectRender = true;
@@ -152,22 +169,23 @@ function create()
 		flickCam.antialiasing = false;
 		setVar('flickCam', flickCam);
 		
-		var marionCam = FlxG.cameras.add(new FlxCamera(0, 0, 1024, 768), false);
-		marionCam.bgColor = 0x00000000;
-		marionCam.pixelPerfectRender = true;
-		marionCam.antialiasing = false;
-		setVar('marionCam', marionCam);
-		
 		var blackCam = FlxG.cameras.add(new FlxCamera(0, 0, 1024, 768), false);
 		blackCam.bgColor = 0xFF000008;
-		setVar('blackCam', blackCam);
 		blackCam.alpha = 0;
+		setVar('blackCam', blackCam);
 		
 		var flashCam = FlxG.cameras.add(new FlxCamera(0, 0, 1024, 768), false);
 		flashCam.bgColor = 0x00000000;
 		flashCam.pixelPerfectRender = true;
 		flashCam.antialiasing = false;
 		setVar('flashCam', flashCam);
+		
+		var winCam = FlxG.cameras.add(new FlxCamera(0, 0, 1024, 768), false);
+		winCam.bgColor = 0xFF000000;
+		winCam.pixelPerfectRender = true;
+		winCam.antialiasing = false;
+		winCam.alpha = 0.00001;
+		setVar('winCam', winCam);
 		
 		var mainCamsGrp:FlxTypedSpriteGroup<FlxSprite>;
 		mainCamsGrp = new FlxTypedSpriteGroup();
@@ -212,6 +230,13 @@ function create()
 			}
 		});
 		
+		createCallback('killOnFin', function(o) {
+			var obj = LuaUtils.getObjectDirectly(o, false);
+			obj.animation.finishCallback = function(n) {
+				parentLua.call('removeLuaSprite', [o]);
+			}
+		});
+		
 		createGlobalCallback('getMainVar', function(v) {
 			return parentLua.call('varMain', [v]);
 		});
@@ -241,6 +266,7 @@ function create()
 	makeScares();
 	makePanel();
 	makeHud();
+	makeWinScreen();
 	
 	doSound('Desolate_Underworld2', 1, 'bgMus', true);
 	doSound('tablefan', 1, 'fanSnd', true);
@@ -429,6 +455,22 @@ function makeOffice() -- buttons are 120, arcade buttons are 190
 	setCam('bigScare');
 	addLuaSprite('bigScare');
 	setAlpha('bigScare', 0.00001);
+	
+	makeAnimatedLuaSprite('scare1', 'gameAssets/Jumpscares/sp/s/scare1');
+	addAnimationByPrefix('scare1', 'scare', 'Scare', 36, false);
+	playAnim('scare1', 'scare', true);
+	setFinFunc('scare1', 'endOfScare');
+	setCam('scare1', 'marionCam');
+	addLuaSprite('scare1');
+	setAlpha('scare1', 0.00001);
+	
+	makeAnimatedLuaSprite('scare2', 'gameAssets/Jumpscares/sp/s/scare2');
+	addAnimationByPrefix('scare2', 'scare', 'Scare', 36, false);
+	playAnim('scare2', 'scare', true);
+	setFinFunc('scare2', 'endOfScare');
+	setCam('scare2', 'marionCam');
+	addLuaSprite('scare2');
+	setAlpha('scare2', 0.00001);
 	
 	makeLuaSprite('scrnCen', 'active', xCam, 382 - 15);
 	setCam('scrnCen');
@@ -1057,6 +1099,12 @@ function onUpdatePost(e)
 	e = e * playbackRate;
 	local ti = e * 60;
 	
+	if doing6AM then
+		if canUpdateWin then update6AM(e, ti); end
+	
+		return Function_StopLua;
+	end
+	
 	if frameActive and canMute and mouseClicked() and mouseOverlaps('muteButton') then
 		canMute = false;
 		doSound('stop', 1, 'callSfx');
@@ -1066,7 +1114,11 @@ function onUpdatePost(e)
 	if marionActive then blackout.setTime = 100; end
 	
 	if cheats.noErr then
+		local sys = systems;
 		
+		sys.audio.prog = 0;
+		sys.video.prog = 0;
+		sys.vent.prog = 0;
 	end
 	
 	updateGotYou(e, ti);
@@ -1103,9 +1155,31 @@ function onUpdatePost(e)
 end
 
 local startedGot = false;
+local madeScare = false;
 function updateGotYou(e, t)
-	local got = getVar('gotYou'); -- FINISH THISSSSSSSSSSSSSSSSSSSSSSSSSS MAKE THE SCARE HAPPEN SO I CAN BE DONE WITH THIS PART OF THE PORT
+	local got = getVar('gotYou');
 	if got == 0 then return; end
+	
+	if not madeScare then
+		madeScare = true;
+		
+		callOnLuas('stopEverything');
+		
+		canMute = false;
+		setAlpha('muteButton', 0);
+		
+		if got == 1 then
+			setAlpha('scare1', 1);
+			playAnim('scare1', 'scare', true);
+		else
+			setAlpha('scare2', 1);
+			playAnim('scare2', 'scare', true);
+			setX('scare2', 1024);
+		end
+	end
+	
+	frozen = false;
+	dropItAll();
 	
 	if not startedGot then
 		startedGot = true;
@@ -1495,7 +1569,7 @@ function mouseClickView()
 	if not lookingVents and mouseOverlaps('selAud', 'camCam') then
 		local aud = systems.audio;
 		if aud.lureNum == 7 and aud.prog > -10 then
-			aud.lureNum = 4;
+			aud.lureNum = 1;
 			aud.prog = aud.prog - AI;
 			
 			setFrame('audInd', 0);
@@ -1899,53 +1973,55 @@ function updateForBreath()
 end
 
 function updateBlackout(e, t)
-	local v = systems.vent;
-	
-	if blackout.setTime > 0 then
-		local fiv = (5 * t);
+	if getVar('gotYou') == 0 then
+		local v = systems.vent;
 		
-		if not blackout.started then
-			blackout.alph = blackout.alph + fiv;
+		if blackout.setTime > 0 then
+			local fiv = (5 * t);
 			
-			if blackout.alph > 255 then 
-				blackout.started = true;
-			end
-		end
-		
-		if blackout.started then
-			if blackout.alph > 0 then
-				blackout.alph = blackout.alph - fiv;
+			if not blackout.started then
+				blackout.alph = blackout.alph + fiv;
+				
+				if blackout.alph > 255 then 
+					blackout.started = true;
+				end
 			end
 			
-			if blackout.alph <= 150 then
-				blackout.started = false;
-			end
-		end
-	end
-	
-	if v.expoTime > 2000 - v.addTime then
-		if not blackout.started then
-			blackout.alph = blackout.alph + t;
-			
-			if blackout.alph > 255 then 
-				blackout.started = true;
+			if blackout.started then
+				if blackout.alph > 0 then
+					blackout.alph = blackout.alph - fiv;
+				end
+				
+				if blackout.alph <= 150 then
+					blackout.started = false;
+				end
 			end
 		end
 		
-		if blackout.started then
-			if blackout.alph > 0 then
-				blackout.alph = blackout.alph - t;
+		if v.expoTime > 2000 - v.addTime then
+			if not blackout.started then
+				blackout.alph = blackout.alph + t;
+				
+				if blackout.alph > 255 then 
+					blackout.started = true;
+				end
 			end
 			
-			if blackout.alph <= 100 then
-				blackout.started = false;
+			if blackout.started then
+				if blackout.alph > 0 then
+					blackout.alph = blackout.alph - t;
+				end
+				
+				if blackout.alph <= 100 then
+					blackout.started = false;
+				end
 			end
 		end
-	end
-	
-	if v.prog > -10 and blackout.setTime <= 0 and blackout.alph > 0 then
-		blackout.started = false;
-		blackout.alph = blackout.alph - t;
+		
+		if v.prog > -10 and blackout.setTime <= 0 and blackout.alph > 0 then
+			blackout.started = false;
+			blackout.alph = blackout.alph - t;
+		end
 	end
 	
 	blackout.setTime = blackout.setTime - t;
@@ -1999,8 +2075,8 @@ function updateSystems(e, t)
 	
 	if aud.lureNum < 7 then
 		aud.lureTime = aud.lureTime + e;
-		while aud.lureTime >= .5 do
-			aud.lureTime = aud.lureTime - .5; -- 1.5
+		while aud.lureTime >= 1.5 do
+			aud.lureTime = aud.lureTime - 1.5;
 			
 			setFrame('audInd', aud.lureNum);
 			aud.lureNum = min(aud.lureNum + 1, 7);
@@ -2138,6 +2214,12 @@ function endScareBB()
 	doFlash('bb');
 end
 
+function endOfScare()
+	if getVar('gotYou') > 0 then
+		runTimer('toGameOver', pl(4 / 60));
+	end
+end
+
 function doFlash(f)
 	setAlpha('whiteFlash', 1);
 	playAnim('whiteFlash', f);
@@ -2155,11 +2237,108 @@ end
 
 function checkHour()
 	updateCounterSpr('hour', curHour);
-	callOnLuas('onHour', {curHour});
 	
 	if curHour == 6 then
+		start6AM();
+	else callOnLuas('onHour', {curHour}); end
+end
+
+function makeWinScreen()
+	makeAnimatedLuaSprite('5Spr', 'gameAssets/Win/6', 359, 341);
+	addAnimationByPrefix('5Spr', '5', 'Five', 0);
+	addAnimationByPrefix('5Spr', '6', 'Bright', 30);
+	playAnim('5Spr', '5', true);
+	setCam('5Spr', 'winCam');
+	addLuaSprite('5Spr');
+	
+	makeAnimatedLuaSprite('lineCache', 'gameAssets/Win/greenLine');
+	setCam('lineCache', 'winCam');
+	addLuaSprite('lineCache');
+	
+	makeLuaSprite('blackGo');
+	makeGraphic('blackGo', 1, 1, '000000');
+	scaleObject('blackGo', 1024, 768);
+	setCam('blackGo', 'winCam');
+	addLuaSprite('blackGo');
+	setAlpha('blackGo', 0);
+end
+
+function start6AM()
+	stopGame();
+	
+	doing6AM = true;
+	
+	removeLuaSprite('lineCache');
+	
+	doSound('Clocks_Chimes_Cl_02480702', 1);
+	doTweenAlpha('winIn', 'winCam', 1, pl(1.01));
+	runTimer('pOne', pl(0.1), 0);
+	
+	setActive('5Spr', true);
+	setActive('blackGo', true);
+	
+	setDataFromSave(sv, 'night', min(curNight + 1, 5));
+	curNight = curNight + 1;
+	
+	setDataFromSave(sv, 'cine', true);
+	
+	if curNight == 7 then
+		setDataFromSave(sv, 'beat6', true);
 		
+		if cheats.hyper and not cheats.radar and not cheats.fast and not cheats.noErr then
+			setDataFromSave(sv, '4thStar', true);
+		end
+	elseif curNight == 6 then
+		setDataFromSave(sv, 'beatGame', true);
+	elseif curNight == 8 and getDataFromSave(sv, 'all20', false) then
+		setDataFromSave(sv, 'beat7', true);
 	end
+	
+	local cus = getDataFromSave(sv, 'doingCustom', 0);
+	if cus > 0 then
+		setDataFromSave(sv, 'c' .. cus, 1);
+	end
+end
+
+local lineChance = 0;
+local hit6 = false;
+function update6AM(e, t)
+	if not hit6 then
+		lineChance = min(lineChance + t, 100);
+		
+		if lineChance >= 100 then
+			hit6 = true;
+			
+			playAnim('5Spr', '6');
+			doSound('CROWD_SMALL_CHIL_EC049202', 1);
+			runTimer('goNextScreen', pl(5));
+		end
+	elseif lineChance > 0 then
+		lineChance = max(lineChance - t, 0);
+	end
+end
+
+local lineYWin = {
+	317,
+	335,
+	355,
+	378,
+	392,
+	411
+};
+local totLines = 0;
+function makeALine()
+	totLines = totLines + 1;
+	local t = 'lineWin' .. totLines;
+	
+	makeAnimatedLuaSprite(t, 'gameAssets/Win/greenLine', 0, (lineYWin[getRandomInt(1, 6)] + 1));
+	addAnimationByPrefix(t, 'fade', 'Fade', 12, false);
+	addOffset(t, 'fade', 0, 15);
+	playAnim(t, 'fade', true);
+	killOnFin(t);
+	setCam(t, 'winCam');
+	addLuaSprite(t);
+	setBlendMode(t, 'add');
 end
 
 function setInCam(c, n, a, v)
@@ -2184,6 +2363,9 @@ local timers = {
 		setAlpha('springWalk', 0);
 		setAlpha('springHide', 0);
 		setAlpha('springHead', 0);
+		
+		setAlpha('scare1', 0);
+		setAlpha('scare2', 0);
 		
 		setAlpha('mangleWindow', 0);
 		
@@ -2243,6 +2425,8 @@ local timers = {
 		setAlpha('flipRight', clAlph(150));
 		setX('flipRight', 1920 - 46);
 		
+		setAlpha('winCam', 0);
+		
 		for i = 1, 15 do
 			if i == curCam or i == curVent then
 				setAlpha('camScreen' .. i, 1);
@@ -2254,7 +2438,6 @@ local timers = {
 	end,
 	
 	['clickDoubleOff'] = function() waitingDouble = false; end,
-	
 	
 	['stopMoveTemp'] = function()
 		canMove = false;
@@ -2326,10 +2509,47 @@ local timers = {
 	['addHour'] = function()
 		curHour = (curHour % 12) + 1;
 		checkHour();
+	end,
+	
+	['toGameOver'] = function()
+		switchState('static');
+	end
+};
+local timersWin = {
+	['pOne'] = function()
+		if Random(100) < lineChance then makeALine(); end
+	end,
+	
+	['goNextScreen'] = function()
+		doTweenAlpha('winOut', 'blackGo', 1, pl(0.9));
 	end
 };
 function onTimerCompleted(t)
+	if doing6AM then
+		if timersWin[t] then timersWin[t](); end
+	
+		return Function_StopLua;
+	end
+	
 	if timers[t] then timers[t](); end
+end
+
+local tweensWin = {
+	['winIn'] = function() canUpdateWin = true; end,
+	['winOut'] = function()
+		if curNight >= 5 and getDataFromSave(sv, 'isDemo', false) then
+			switchState('DemoEnd');
+		else
+			switchState('Load');
+		end
+	end
+};
+function onTweenCompleted(t)
+	if doing6AM then
+		if tweensWin[t] then tweensWin[t](); end
+	
+		return Function_StopLua;
+	end
 end
 
 function cacheSounds()
@@ -2362,4 +2582,7 @@ function cacheSounds()
 	precacheSound('stop');
 	
 	precacheSound('PartyFavorraspyPart_AC01__3');
+	
+	precacheSound('Clocks_Chimes_Cl_02480702');
+	precacheSound('CROWD_SMALL_CHIL_EC049202');
 end

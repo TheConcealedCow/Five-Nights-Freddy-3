@@ -1,8 +1,3 @@
---[[
-	// TODO //
-	- force move
-	- got you
-]]
 local r = {
 	ai = 0,
 	cam = 0,
@@ -65,7 +60,6 @@ function onCreate()
 	r.hyper = getMainVar('cheats').hyper;
 	
 	local spawnCam = 10 - Random(5);
-	--local spawnCam = 3;
 	setSpringCam(spawnCam);
 	
 	runTimer('springResetAggro', pl(15), 0);
@@ -90,8 +84,6 @@ function setSpringCam(c)
 	if c > 0 and c < 16 then
 		setCamProp(getProp(c), c, 'spIn', true);
 	end
-	
-	debugPrint('spring is in cam: ' .. c);
 	
 	r.cam = c;
 	setVar('springCam', c);
@@ -162,12 +154,12 @@ local upCam = {
 	end,
 	[35] = function()
 		if getMainVar('inAPanel') then
-			if r.action == 1 then
+			if r.action == 2 then
 				resetMove();
 				setSpringCam(1);
 				
 				return;
-			elseif r.action > 1 then
+			elseif r.action > 2 then
 				resetMove();
 				setSpringCam(40);
 				
@@ -233,9 +225,9 @@ local upCam = {
 		end
 		
 		if getMainVar('viewingCams') then
-			gotMoveTime = gotMoveTime + e;
-			while gotMoveTime >= 1 do
-				gotMoveTime = gotMoveTime - 1;
+			r.gotMoveTime = r.gotMoveTime + e;
+			while r.gotMoveTime >= 1 do
+				r.gotMoveTime = r.gotMoveTime - 1;
 				
 				if getRandomBool() then
 					setX('bigScare', 976);
@@ -254,9 +246,9 @@ local upCam = {
 			setSpringCam(100);
 		elseif getMainVar('viewingCams') then
 			if getAlpha('bigScare') == 0 then
-				tryGotTime = tryGotTime + e;
-				while tryGotTime >= 1 do
-					tryGotTime = tryGotTime - 1;
+				r.tryGotTime = r.tryGotTime + e;
+				while r.tryGotTime >= 1 do
+					r.tryGotTime = r.tryGotTime - 1;
 					if getRandomBool() then
 						setVar('gotYou', 2);
 					end
@@ -295,6 +287,9 @@ function updateFunc(e, t)
 	if r.goingTo > 0 then
 		r.goingTime = r.goingTime - t;
 		if r.goingTime <= 0 then
+			local leave = leaveCam[r.cam];
+			if leave then leave(); end
+			
 			setSpringCam(r.goingTo);
 			
 			runMainFunc('setStaticProp', {'F', 50 + Random(100)});
@@ -315,7 +310,6 @@ local phaseCheck = {
 		r.isVisible = true;
 	end
 };
-
 local phaseMove = {
 	[25] = function()
 		if r.action > 2 then
@@ -407,10 +401,7 @@ function makeMove()
 				if newCam == 0 then
 					r.action = action;
 				else
-					--if newCam < 25 then return; end -- 
-					
 					setSpringCam(newCam);
-					
 					tryFx();
 					
 					local new = onCam[newCam];
@@ -464,8 +455,35 @@ function checkEerie()
 	setVar('springEerie', false);
 end
 
+local forceTo = {
+	[5] = 2,
+	[2] = 25
+};
+local goForced = {
+	[1] = 5,
+	[2] = 4,
+	[3] = 10
+}
 function spForceMove()
+	local go = getRandomInt(1, 3)
 	
+	if r.cam > 5 and r.cam < 11 then --5, 4, 10
+		local newGoin = goForced[go];
+		
+		setSpringCam(newGoin);
+		local new = onCam[newGoin];
+		if new then new(); end
+		
+		if go > 1 then
+			r.moveCount = 0;
+		end
+	elseif forceTo[r.cam] then
+		local newGoin = forceTo[r.cam];
+		
+		setSpringCam(newGoin);
+		local new = onCam[newGoin];
+		if new then new(); end
+	end
 end
 
 function enterCams()

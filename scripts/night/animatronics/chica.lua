@@ -101,6 +101,16 @@ function chicaFinScare()
 	r.shownUp = false;
 end
 
+function stopEverything()
+	playAnim('chicaOffice', 'idle', true);
+	setAlpha('chicaOffice', 0);
+	
+	r.shownUp = false;
+	r.triggered = true;
+	setVar('chicaEerie', false);
+	r.shownUp = false;
+end
+
 function onHour(h)
 	curHour = h;
 end

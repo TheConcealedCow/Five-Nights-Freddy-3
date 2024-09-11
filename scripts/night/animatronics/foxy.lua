@@ -50,6 +50,12 @@ function enterCams()
 	end
 end
 
+function stopEverything()
+	setVis('foxyOffice', false);
+	r.didSpawn = false;
+	r.canSpawn = false;
+end
+
 function onHour(h)
 	curHour = h;
 end
