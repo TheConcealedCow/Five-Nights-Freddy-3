@@ -467,7 +467,7 @@ local goForced = {
 function spForceMove()
 	local go = getRandomInt(1, 3)
 	
-	if r.cam > 5 and r.cam < 11 then --5, 4, 10
+	if r.cam > 5 and r.cam < 11 then
 		local newGoin = goForced[go];
 		
 		setSpringCam(newGoin);

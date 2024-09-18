@@ -3,7 +3,7 @@ function create()
 	
 	setVar('canEsc', false);
 	
-	makeLuaSprite('screen', 'gameAssets/Rare/2');
+	makeLuaSprite('screen', 'gameAssets/Rare/1');
 	addLuaSprite('screen');
 	
 	runTimer('toTitle', pl(5));

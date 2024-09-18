@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="scared.png" width="454" height="231">
+  <SubTexture name="Man0002" x="1" y="1"  width="123" height="214" frameX="-61" frameY="-13" frameWidth="200" frameHeight="230"/>
+  <SubTexture name="Run0002" x="126" y="1"  width="105" height="214" frameX="-66" frameY="-13" frameWidth="200" frameHeight="230"/>
+  <SubTexture name="Run0001" x="233" y="1"  width="119" height="223" frameX="-66" frameY="-6" frameWidth="200" frameHeight="230"/>
+  <SubTexture name="Man0001" x="354" y="1"  width="99" height="229" frameX="-60" frameY="-0" frameWidth="200" frameHeight="230"/>
+</TextureAtlas>

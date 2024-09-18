@@ -19,7 +19,7 @@ function create()
 end
 
 function goAway()
-	if getRandomInt(1, 10000) == 1 then
+	if getRandomInt(1, 1000) == 1 then
 		switchState('Rare2');
 	else
 		switchState('Title');

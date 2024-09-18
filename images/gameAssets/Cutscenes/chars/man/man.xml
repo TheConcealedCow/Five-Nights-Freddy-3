@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="man.png" width="438" height="222">
+  <SubTexture name="Man0002" x="1" y="1"  width="99" height="207" frameX="-54" frameY="-11" frameWidth="200" frameHeight="230"/>
+  <SubTexture name="TakeApart0002" x="102" y="1"  width="117" height="210" frameX="-19" frameY="-10" frameWidth="200" frameHeight="230"/>
+  <SubTexture name="Man0001" x="221" y="1"  width="99" height="217" frameX="-54" frameY="-6" frameWidth="200" frameHeight="230"/>
+  <SubTexture name="TakeApart0001" x="322" y="1"  width="115" height="220" frameX="-20" frameY="-3" frameWidth="200" frameHeight="230"/>
+</TextureAtlas>

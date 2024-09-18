@@ -1,8 +1,6 @@
 --[[
 	// TODO //
-	
 	- minigame trigger
-	- night start
 ]]
 local night = 'gameAssets/night/';
 local hud = night .. 'hud/';
@@ -258,6 +256,8 @@ function create()
 	]]);
 	
 	addLuaScript('scripts/objects/COUNTERDOUBDIGIT');
+	
+	curNight = getDataFromSave(sv, 'night', 1);
 	
 	calcAI();
 	
@@ -2106,6 +2106,8 @@ function updateSystems(e, t)
 		setAlpha('vidErrView', 0);
 		setExists('mainCamsGrp', true);
 		setExists('ventCamsGrp', true);
+		
+		if lookingVents then setVis('ventCamsGrp', true); end
 	end
 	
 	local vent = systems.vent;
@@ -2277,8 +2279,9 @@ function start6AM()
 	setActive('5Spr', true);
 	setActive('blackGo', true);
 	
-	setDataFromSave(sv, 'night', min(curNight + 1, 5));
+	setDataFromSave(sv, 'scene', curNight);
 	curNight = curNight + 1;
+	setDataFromSave(sv, 'night', min(curNight, 5));
 	
 	setDataFromSave(sv, 'cine', true);
 	

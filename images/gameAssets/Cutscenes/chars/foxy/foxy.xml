@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="foxy.png" width="504" height="371">
+  <SubTexture name="Down0002" x="1" y="1"  width="123" height="181" frameX="-43" frameY="-15" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Left0002" x="126" y="1"  width="128" height="181" frameX="-37" frameY="-15" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Right0002" x="256" y="1"  width="121" height="181" frameX="-53" frameY="-14" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Up0002" x="379" y="1"  width="123" height="181" frameX="-45" frameY="-14" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Down0001" x="1" y="184"  width="123" height="186" frameX="-42" frameY="-10" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Left0001" x="126" y="184"  width="128" height="186" frameX="-37" frameY="-10" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Right0001" x="256" y="184"  width="122" height="186" frameX="-53" frameY="-10" frameWidth="200" frameHeight="200"/>
+  <SubTexture name="Up0001" x="380" y="184"  width="123" height="186" frameX="-45" frameY="-10" frameWidth="200" frameHeight="200"/>
+</TextureAtlas>

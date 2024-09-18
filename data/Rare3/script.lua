@@ -3,15 +3,15 @@ function create()
 	
 	setVar('canEsc', false);
 	
-	makeLuaSprite('screen', 'gameAssets/Rare/2');
+	makeLuaSprite('screen', 'gameAssets/Rare/3');
 	addLuaSprite('screen');
 	
-	runTimer('toTitle', pl(5));
+	runTimer('today', pl(5));
 end
 
 local timers = {
-	['toTitle'] = function()
-		switchState('Title');
+	['today'] = function()
+		switchState('WhatDay');
 	end
 };
 function onTimerCompleted(t)

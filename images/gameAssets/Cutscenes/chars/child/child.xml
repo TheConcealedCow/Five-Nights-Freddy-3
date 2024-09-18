@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="child.png" width="159" height="172">
+  <SubTexture name="Up0002" x="1" y="1"  width="51" height="81" frameX="-0" frameY="-7" frameWidth="51" frameHeight="88"/>
+  <SubTexture name="Down0002" x="54" y="1"  width="51" height="82" frameX="-0" frameY="-3" frameWidth="51" frameHeight="88"/>
+  <SubTexture name="Side0002" x="107" y="1"  width="51" height="82" frameX="-0" frameY="-5" frameWidth="51" frameHeight="88"/>
+  <SubTexture name="Up0001" x="1" y="84"  width="51" height="85" frameX="-0" frameY="-1" frameWidth="51" frameHeight="88"/>
+  <SubTexture name="Down0001" x="54" y="85"  width="51" height="86" frameX="-0" frameY="-0" frameWidth="51" frameHeight="88"/>
+  <SubTexture name="Side0001" x="107" y="85"  width="51" height="86" frameX="-0" frameY="-0" frameWidth="51" frameHeight="88"/>
+</TextureAtlas>

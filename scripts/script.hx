@@ -30,6 +30,7 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	'switchState' => function(name) nextState(name)
     'exitGame' => function() exit()
 	
+	'killSounds' => function() killSounds()
 	'stopGame' => function() stopGame()
 	
 	'bound' => function(x, a, b) return FlxMath.bound(x, a, b)
@@ -104,12 +105,17 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	},
 	'getAlpha' => function(o) return LuaUtils.getObjectDirectly(o).alpha
 	
+	'setColor' => function(o, c) LuaUtils.getObjectDirectly(o).color = c
+	
 	'getVis' => function(o, v) return LuaUtils.getObjectDirectly(o).visible
 	'setVis' => function(o, v) LuaUtils.getObjectDirectly(o).visible = v
 	
 	'setVel' => function(o, x, y) LuaUtils.getObjectDirectly(o).velocity.set(x, y)
 	'setVelX' => function(o, v) LuaUtils.getObjectDirectly(o).velocity.x = v
 	'setVelY' => function(o, v) LuaUtils.getObjectDirectly(o).velocity.y = v
+	
+	'setFlipX' => function(o, x) LuaUtils.getObjectDirectly(o).flipX = x
+	'setAnimFlipX' => function(o, a, x) LuaUtils.getObjectDirectly(o).animation.getByName(a).flipX = x
 	
 	'setFrame' => function(o, f) LuaUtils.getObjectDirectly(o).animation.curAnim.curFrame = f
 	'getFrame' => function(o) return LuaUtils.getObjectDirectly(o).animation.curAnim.curFrame
@@ -170,6 +176,8 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 function onCreatePost() {
     game.inCutscene = true;
     game.canPause = false;
+	
+	setVar('canEsc', true);
 
     // kills every object in playstate so that the draw and update calls are reduced
     for (obj in game.members) {
@@ -240,7 +248,7 @@ function nextState(name:String) {
 }
 
 function onUpdate(elapsed:Float) {
-    if (FlxG.keys.justPressed.ESCAPE) exit();
+    if (FlxG.keys.justPressed.ESCAPE && getVar('canEsc')) exit();
 }
 
 function exit() {
@@ -287,6 +295,9 @@ function resize(?width:Int, ?height:Int) {
 		
 		FlxG.resizeGame(width, height);
 		FlxG.resizeWindow(windWidth, windHeight);
+		
+		FlxG.worldBounds.width = width + 20;
+		FlxG.worldBounds.height = height + 20;
 		
 		FlxG.scaleMode.scale.x = sizeChangeX;
 		FlxG.scaleMode.scale.y = sizeChangeY;

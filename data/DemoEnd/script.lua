@@ -1,6 +1,8 @@
 function create()
 	doSound('Desolate_Underworld2', 1, 'bgMus', true);
 	
+	setVar('canEsc', false);
+	
 	makeLuaSprite('demo', 'gameAssets/DemoEnd/demoEnd', 144 + 55, 298);
 	addLuaSprite('demo');
 	
