@@ -5,13 +5,6 @@ local bits = loose .. 'bits/';
 local hud = scene .. 'hud/';
 local BOX = scene .. 'block';
 
---[[
-	// TODO //
-	- current hint on 4-2
-	
-	-- make sure ta fix the movement speed when ur done!!
-]]
-
 local bit = require('bit');
 local band = bit.band;
 local lshift = bit.lshift;
@@ -43,7 +36,7 @@ local abs = math.abs;
 local min = math.min;
 local max = math.max;
 
-local curScene = 5;
+local curScene = 1;
 
 local xRoom = 3;
 local yRoom = 2;
@@ -93,6 +86,8 @@ local blocks = {
 	up = false,
 	right = false
 };
+
+local taskSpr = {};
 
 local topPos = {499, -1};
 local stageChars = {
@@ -229,7 +224,9 @@ local rooms = {
 			setBlock('right', true);
 			setBlock('left', true);
 			
-			showTask();
+			for _, s in pairs(taskSpr) do
+				setAlpha(s, 1);
+			end
 			
 			setAlpha('hall1', 1);
 			setAlpha('hall2', 1);
@@ -351,7 +348,7 @@ function create()
 	doSound('rainstorm2', 1, 'rainSnd', true);
 	doSound('scanner4', 1, 'scanSnd', true);
 	
-	--curScene = min(getDataFromSave(sv, 'scene', 1), 5);
+	curScene = min(getDataFromSave(sv, 'scene', 1), 5);
 	isFinal = (curScene >= 5);
 	
 	if curScene == 4 then
@@ -831,23 +828,73 @@ function makeForScene()
 	end
 end
 
+local aPos = {
+	{863, 229},
+	{863, 324},
+	{863, 419},
+	{863, 514}
+};
+local cakePos = {
+	{150, 187},
+	{150, 301},
+	{150, 415},
+	{150, 529}
+};
 local makeForTask = {
 	[1] = function()
+		makeLuaSprite('bb', loose .. 'code/text/bb', 134, 129);
+		setCam('bb', 'mainCam');
+		addLuaSprite('bb');
+		setAlpha('bb', 0.00001);
 		
+		for i = 1, 4 do
+			local p = aPos[i];
+			local t = 'a' .. i;
+			
+			makeLuaSprite(t, loose .. 'code/button/' .. i, p[1], p[2]);
+			addToOffsets(t, 43, 35);
+			setCam(t, 'mainCam');
+			addLuaSprite(t);
+			setAlpha(t, 0.00001);
+		end
+		
+		return {'bb', 'a1', 'a2', 'a3', 'a4'};
 	end,
 	[2] = function()
+		for i = 1, 4 do
+			local p = cakePos[i];
+			local t = 'cup' .. i;
+			
+			makeLuaSprite(t, loose .. 'code/cup', p[1], p[2]);
+			addToOffsets(t, 38, 44);
+			setCam(t, 'mainCam');
+			addLuaSprite(t);
+			setAlpha(t, 0.00001);
+		end
 		
+		return {'cup1', 'cup2', 'cup3', 'cup4'};
 	end,
 	[3] = function()
+		makeLuaSprite('code', loose .. 'code/text/nums', 137, 207);
+		setCam('code', 'mainCam');
+		addLuaSprite('code');
+		setAlpha('code', 0.00001);
 		
+		return {'code'};
 	end,
 	[4] = function()
+		makeLuaSprite('find', loose .. 'code/shadow', 864, 352);
+		addToOffsets('find', 54, 112);
+		setCam('find', 'mainCam');
+		addLuaSprite('find');
+		setAlpha('find', 0.00001);
 		
+		return {'find'};
 	end
 };
 function makeTask()
 	local h = makeForTask[curScene];
-	if h then h(); end
+	if h then taskSpr = h(); end
 end
 
 local playAs = {
@@ -1005,46 +1052,6 @@ function updateCharacterPos()
 	if seeDir then setPos('cont', pos[1], (pos[2] + 63) - 269); end
 end
 
-local showForScene = {
-	[1] = function()
-	
-	end,
-	[2] = function()
-	
-	end,
-	[3] = function()
-	
-	end,
-	[4] = function()
-		setAlpha('findTxt', 1);
-		setAlpha('find', 1);
-	end
-};
-function showTask()
-	local h = showForScene[curScene];
-	if h then h(); end
-end
-
-local hideForScene = {
-	[1] = function()
-	
-	end,
-	[2] = function()
-	
-	end,
-	[3] = function()
-	
-	end,
-	[4] = function()
-		setAlpha('findTxt', 0);
-		setAlpha('find', 0);
-	end
-};
-function hideTask()
-	local h = hideForScene[curScene];
-	if h then h(); end
-end
-
 function leaveARoom()
 	for _, s in pairs({'left', 'down', 'up', 'right'}) do
 		setBlock(s, false);
@@ -1054,7 +1061,6 @@ function leaveARoom()
 	
 	killRain();
 	killRats();
-	hideTask();
 	hideShadow();
 	
 	hideEverything();
@@ -1137,8 +1143,6 @@ end
 
 function killRain()
 	totRain = 0;
-	
-	debugPrint(#rainGrp);
 	
 	if #rainGrp > 0 then
 		local r = rem(rainGrp, 1);
@@ -1296,6 +1300,10 @@ function hideEverything()
 	
 	setAlpha('desk341', 0);
 	setAlpha('desk342', 0);
+	
+	for _, s in pairs(taskSpr) do
+		setAlpha(s, 0);
+	end
 	
 	if isFinal then
 		setAlpha('suit', 0);
