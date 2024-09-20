@@ -112,10 +112,8 @@ function create()
 	luaDebugMode = true;
 	
 	runHaxeCode([[
-		import openfl.filters.ShaderFilter;
 		import flixel.sound.FlxSoundGroup;
 		import flixel.group.FlxTypedSpriteGroup;
-		import flixel.FlxCamera;
 		import psychlua.LuaUtils;
 		
 		var shad = game.createRuntimeShader('panorama');

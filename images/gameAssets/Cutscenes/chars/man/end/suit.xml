@@ -2,16 +2,16 @@
 <!--
 Created with Free texture packer v0.6.7 http://free-tex-packer.com
 -->
-<TextureAtlas imagePath="suit.png" width="859" height="642">
-  <SubTexture name="Eyes0001" x="1" y="1"  width="147" height="151" frameX="-0" frameY="-0" frameWidth="147" frameHeight="151"/>
-  <SubTexture name="Idle0001" x="150" y="1"  width="147" height="151" frameX="-0" frameY="-0" frameWidth="147" frameHeight="151"/>
-  <SubTexture name="Sit0002" x="299" y="1"  width="222" height="180" frameX="-0" frameY="-0" frameWidth="222" frameHeight="180"/>
-  <SubTexture name="Sit0001" x="523" y="1"  width="222" height="183" frameX="-0" frameY="-0" frameWidth="222" frameHeight="183"/>
-  <SubTexture name="Laugh0002" x="747" y="1"  width="109" height="272" frameX="-0" frameY="-0" frameWidth="109" frameHeight="272"/>
-  <SubTexture name="Kneel0002" x="1" y="154"  width="222" height="208" frameX="-0" frameY="-0" frameWidth="222" frameHeight="208"/>
-  <SubTexture name="Kneel0001" x="225" y="183"  width="222" height="211" frameX="-0" frameY="-0" frameWidth="222" frameHeight="211"/>
-  <SubTexture name="Break0002" x="449" y="186"  width="199" height="273" frameX="-0" frameY="-0" frameWidth="199" frameHeight="273"/>
-  <SubTexture name="Break0001" x="650" y="275"  width="208" height="274" frameX="-0" frameY="-0" frameWidth="208" frameHeight="274"/>
-  <SubTexture name="Up0001" x="1" y="364"  width="109" height="275" frameX="-0" frameY="-0" frameWidth="109" frameHeight="275"/>
-  <SubTexture name="Laugh0001" x="112" y="364"  width="109" height="277" frameX="-0" frameY="-0" frameWidth="109" frameHeight="277"/>
+<TextureAtlas imagePath="suit.png" width="760" height="674">
+  <SubTexture name="Eyes0001" x="1" y="1"  width="147" height="151" frameX="-31" frameY="-125" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Idle0001" x="150" y="1"  width="147" height="151" frameX="-31" frameY="-125" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Lay0002" x="299" y="1"  width="222" height="180" frameX="-3" frameY="-115" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Lay0001" x="523" y="1"  width="222" height="183" frameX="-3" frameY="-113" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Kneel0002" x="1" y="154"  width="222" height="208" frameX="-2" frameY="-79" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Kneel0001" x="225" y="183"  width="222" height="211" frameX="-2" frameY="-76" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Laugh0002" x="449" y="186"  width="109" height="272" frameX="-53" frameY="-5" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Lock0002" x="560" y="186"  width="199" height="273" frameX="-0" frameY="-4" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Lock0001" x="1" y="364"  width="208" height="274" frameX="-0" frameY="-4" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Up0001" x="211" y="396"  width="109" height="275" frameX="-50" frameY="-1" frameWidth="225" frameHeight="296"/>
+  <SubTexture name="Laugh0001" x="322" y="396"  width="109" height="277" frameX="-53" frameY="-0" frameWidth="225" frameHeight="296"/>
 </TextureAtlas>

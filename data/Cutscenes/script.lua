@@ -7,10 +7,28 @@ local BOX = scene .. 'block';
 
 --[[
 	// TODO //
-	- final scene
-	- shadow freddy walking
 	- current hint on 4-2
+	
+	-- make sure ta fix the movement speed when ur done!!
 ]]
+
+local bit = require('bit');
+local band = bit.band;
+local lshift = bit.lshift;
+local rshift = bit.rshift;
+
+local cosinus = {
+    [0] = 256, 251, 236, 212, 181, 142, 97, 49,
+    0, -49, -97, -142, -181, -212, -236, -251,
+    -256, -251, -236, -212, -181, -142, -97, -49,
+    0, 49, 97, 142, 181, 212, 236, 251
+};
+local sinus = {
+    [0] = 0, -49, -97, -142, -181, -212, -236, -251,
+    -256, -251, -236, -212, -181, -142, -97, -49,
+    0, 49, 97, 142, 181, 212, 236, 251,
+    256, 251, 236, 212, 181, 142, 97, 49
+};
 
 local rem = table.remove;
 local ins = table.insert;
@@ -25,7 +43,7 @@ local abs = math.abs;
 local min = math.min;
 local max = math.max;
 
-local curScene = 1;
+local curScene = 5;
 
 local xRoom = 3;
 local yRoom = 2;
@@ -36,7 +54,7 @@ local desk = false;
 local gift = false;
 
 local hitErr = false;
-man = {
+local man = {
 	running = false,
 	
 	leftTime = 0,
@@ -44,11 +62,9 @@ man = {
 	upTime = 0,
 	rightTime = 0
 };
-local manEnd = {
-	
-};
 
 local isFinal = false;
+local trigFinal = false;
 
 local character = {
 	canMove = true,
@@ -58,6 +74,18 @@ local character = {
 	
 	dir = 'down',
 };
+
+local manEnd = {
+	trips = 0,
+	phase = 0,
+	
+	secSeq = false,
+	hitPhase = false,
+	suitSeq = false,
+};
+for _, n in pairs({'right', 'downLeft', 'upLeft', 'downRight', 'upRight', 'moveLeft', 'moveRight', 'leftStep', 'rightStep'}) do
+	manEnd[n .. 'Time'] = 0;
+end
 
 local blocks = {
 	left = false,
@@ -94,7 +122,12 @@ local rooms = {
 				for i = 1, 4 do
 					setAlpha('child' .. i, 1);
 				end
+				
+				setAlpha('suit', 1);
+				setAlpha('manFinal', 1);
 			end
+			
+			trigFinal = true;
 			
 			setAlpha('blood1', 1);
 			setAlpha('blood3', 1);
@@ -257,7 +290,6 @@ local rainSpawns = {
 	{870, -27},
 	{946, -23},
 };
-local rain = {};
 
 local ratSpawns = {
 	{162, 587},
@@ -307,12 +339,20 @@ function create()
 		hudCam.pixelPerfectRender = true;
 		hudCam.antialiasing = false;
 		setVar('hudCam', hudCam);
+		
+		createCallback('setFrameFunc', function(o, f) {
+			var obj = LuaUtils.getObjectDirectly(o, false);
+			obj.animation.callback = function(n, fr) {
+				parentLua.call(f, [n, fr]);
+			}
+		});
 	]]);
 	
 	doSound('rainstorm2', 1, 'rainSnd', true);
 	doSound('scanner4', 1, 'scanSnd', true);
 	
 	--curScene = min(getDataFromSave(sv, 'scene', 1), 5);
+	isFinal = (curScene >= 5);
 	
 	if curScene == 4 then
 		xRoom = 2;
@@ -321,6 +361,8 @@ function create()
 	
 	makeScene();
 	makeHud();
+	
+	makeSuit();
 	
 	initChar();
 	
@@ -355,6 +397,21 @@ function makeScene()
 	
 	makeScanLines();
 	makeStaticObjs();
+	
+	for i = 1, min(curScene, 4) do
+		local p = parts[i];
+		local t = p[1] .. 'Part';
+		
+		makeLuaSprite(t, bits .. p[1], p[3][1], p[3][2]);
+		addToOffsets(t, p[2][1], p[2][2]);
+		setCam(t, 'mainCam');
+		addLuaSprite(t);
+		setAlpha(t, 0.00001);
+	end
+	
+	if curScene >= 3 then
+		setObjectOrder('chicaPart', getObjectOrder('bonniePart') - 1);
+	end
 	
 	makeWalls();
 	makeBlocks();
@@ -710,22 +767,57 @@ function makeTables()
 	end
 end
 
+function makeSuit()
+	if not isFinal then return; end
+	
+	makeAnimatedLuaSprite('suit', scene .. 'chars/man/end/suit', (topPos[1] + 329) - 104, (topPos[2] + 463) - 275);
+	addAnimationByPrefix('suit', 'idle', 'Idle', 0);
+	addAnimationByPrefix('suit', 'eyes', 'Eyes', 0);
+	addAnimationByPrefix('suit', 'up', 'Up', 0);
+	addAnimationByPrefix('suit', 'laugh', 'Laugh', 3);
+	addAnimationByPrefix('suit', 'lock', 'Lock', 30);
+	addAnimationByPrefix('suit', 'kneel', 'Kneel', 30);
+	addAnimationByPrefix('suit', 'lay', 'Lay', 15);
+	setFrameFunc('suit', 'suitFrame');
+	playAnim('suit', 'idle', true);
+	setCam('suit', 'mainCam');
+	setObjectOrder('suit', 0);
+	setAlpha('suit', 0.00001);
+end
+
+local childPos = {
+	{352, 692},
+	{443, 692},
+	{562, 692},
+	{673, 692}
+};
 function makeForScene()
-	isFinal = (curScene >= 5);
-	
-	for i = 1, min(curScene, 4) do
-		local p = parts[i];
-		local t = p[1] .. 'Part';
-		
-		makeLuaSprite(t, bits .. p[1], p[3][1], p[3][2]);
-		addToOffsets(t, p[2][1], p[2][2]);
-		setCam(t, 'mainCam');
-		addLuaSprite(t);
-		setAlpha(t, 0.00001);
-	end
-	
 	if isFinal then
+		for i = 1, 4 do
+			local t = 'child' .. i;
+			local p = childPos[i];
+			
+			makeAnimatedLuaSprite(t, scene .. 'chars/child/childBG', p[1], p[2]);
+			addAnimationByPrefix(t, 'idle', 'Idle', 3);
+			addOffset(t, 'idle', 25, 42);
+			playAnim(t, 'idle', true);
+			setCam(t, 'mainCam');
+			addLuaSprite(t);
+			setAlpha(t, 0.00001);
+		end
 		
+		makeAnimatedLuaSprite('manFinal', scene .. 'chars/man/end/man', topPos[1] + 163, topPos[2] + 453);
+		addAnimationByPrefix('manFinal', 'right', 'Man', 12);
+		addAnimationByPrefix('manFinal', 'left', 'Man', 12);
+		addAnimationByPrefix('manFinal', 'run', 'Run', 12);
+		setAnimFlipX('manFinal', 'left', true);
+		addOffset('manFinal', 'right', 104, 94);
+		addOffset('manFinal', 'left', 95, 94);
+		addOffset('manFinal', 'run', 106, 101);
+		playAnim('manFinal', 'left', true);
+		setCam('manFinal', 'mainCam');
+		addLuaSprite('manFinal');
+		setAlpha('manFinal', 0.00001);
 	else
 		makeAnimatedLuaSprite('man', scene .. 'chars/man/man', topPos[1] + 3, topPos[2] + 15);
 		addAnimationByPrefix('man', 'man', 'Man', 6);
@@ -884,9 +976,25 @@ function makeChar(t, c)
 end
 
 function updateCharacterPos()
+	while trigFinal and curActualPos[2] > 640 do
+		curActualPos[2] = curActualPos[2] - 50;
+	end
+	
 	local pos = curActualPos;
 	
 	setPos('charBox', pos[1] - 31, pos[2] - 31);
+	
+	if not isFinal and yRoom == 2 and xRoom == 5 and objectsOverlap('charBox', 'upBlock') then
+		curActualPos[2] = curActualPos[2] + 60;
+		hitErr = true;
+		
+		updateCharacterPos();
+		
+		triggerErr();
+		
+		return;
+	end
+	
 	setPos('LBox', (pos[1] - 83) - 29, (pos[2] + 3) - 51);
 	setPos('DBox', (pos[1] - 1) - 47, (pos[2] + 63) - 31);
 	setPos('UBox', (pos[1] + 1) - 47, (pos[2] - 61) - 31);
@@ -947,6 +1055,7 @@ function leaveARoom()
 	killRain();
 	killRats();
 	hideTask();
+	hideShadow();
 	
 	hideEverything();
 end
@@ -970,8 +1079,71 @@ function resetRoom()
 	end
 end
 
-function killRain()
+local rainTime = 0;
+
+local rainGrp = {};
+local rainLen = 0;
+local totRain = 1;
+function makeRain()
+	local t = 'rain' .. totRain;
+	local p = rainSpawns[getRandomInt(1, #rainSpawns)];
 	
+	makeLuaSprite(t, nil, p[1], p[2]);
+	makeGraphic(t, 1, 1, '23475f');
+	scaleObject(t, 18, 32);
+	addToOffsets(t, 8, 15);
+	setCam(t, 'mainCam');
+	addLuaSprite(t);
+	
+	ins(rainGrp, {
+		tag = t,
+		
+		alTime = 0,
+		tTime = 0
+	});
+	
+	totRain = totRain + 1;
+end
+
+function updateRain(e, t)
+	if #rainGrp < 2 then
+		rainTime = rainTime + e;
+		while rainTime >= 1 do
+			rainTime = rainTime - 1;
+			if Random(3) == 1 then
+				makeRain();
+			end
+		end
+	end
+	
+	for i, r in pairs(rainGrp) do
+		r.tTime = r.tTime + e;
+		while r.tTime >= 0.2 do
+			r.tTime = r.tTime - 0.2;
+			
+			r.alTime = r.alTime - 1;
+			if r.alTime <= -20 then
+				removeLuaSprite(r.tag);
+				rem(rainGrp, i);
+				
+				return;
+			end
+			
+			addX(r.tag, 1);
+			addY(r.tag, 30);
+		end
+	end
+end
+
+function killRain()
+	totRain = 0;
+	
+	debugPrint(#rainGrp);
+	
+	if #rainGrp > 0 then
+		local r = rem(rainGrp, 1);
+		removeLuaSprite(r.tag);
+	end
 end
 
 function killRats() -- https://www.youtube.com/watch?v=O5cIZ77jBTw&t=290s
@@ -1130,7 +1302,7 @@ function hideEverything()
 		setAlpha('manFinal', 0);
 		
 		for i = 1, 4 do
-			setAlpha('child' .. i, 1);
+			setAlpha('child' .. i, 0);
 		end
 	else
 		setAlpha('man', 0);
@@ -1152,27 +1324,83 @@ function hideEverything()
 	end
 end
 
-local rainTime = 0;
-
 local tickRate = 0;
 local frameSec = 1 / 60;
 function onUpdatePost(e)
 	e = e * playbackRate;
-	local ti = e * 60;
 	
 	updateRats(e);
-	updateMan(e, ti);
+	updateRain(e);
 	
-	local ticks = 0;
 	tickRate = tickRate + e;
 	while (tickRate >= frameSec) do
 		tickRate = tickRate - frameSec;
-		ticks = ticks + 1;
+		
+		onTick();
 	end
 	
-	callOnLuas('updateFunc', {e, ti, ticks});
+	updateMan(e);
 	
 	return Function_StopLua;
+end
+
+local bleeding = false;
+local bloodMake = {
+	{838, 261},
+	{782, 325},
+	{884, 323},
+	{836, 405},
+	{838, 308},
+};
+function onTick()
+	if not trigFinal then return; end
+	
+	if manEnd.phase == 2 then
+		local x = getX('manFinal'); 
+		local p = curActualPos[1];
+		if x > p - 200 and x > 200 then
+			addX('manFinal', -50);
+			doSound('run', 1, 'manSnd');
+		end
+		
+		if getX('manFinal') <= 200 then
+			manEnd.phase = 3;
+		end
+	end
+	
+	if bleeding then
+		makeBrud();
+	end
+end
+
+local brudGrp = {};
+local totBrud = 1;
+local brudSpd = lshift(100, 8);
+function makeBrud()
+	local t = 'brudSpr' .. totBrud
+	local p = bloodMake[getRandomInt(1, #bloodMake)];
+	
+	makeLuaSprite(t, nil, p[1], p[2]);
+	makeGraphic(t, 1, 1, 'fe0000');
+	scaleObject(t, 24, 24);
+	addToOffsets(t, 12, 12);
+	setCam(t, 'mainCam');
+	addLuaSprite(t);
+	
+	local d = getRandomInt(3, 13);
+	
+	ins(brudGrp, {
+		tag = t,
+		
+		off = getPos(t),
+		mSpd = tonumber(brudSpd),
+		trg = {cosinus[d], sinus[d]},
+		cal = {0, 0},
+		
+		offY = 0
+	});
+	
+	totBrud = totBrud + 1;
 end
 
 function tryMovements()
@@ -1227,14 +1455,7 @@ local dirFunc = {
 		if objOnCorner('UBox') then return; end
 		if objOnDesk('UBox') then return; end
 		
-		if not isFinal and yRoom == 2 and xRoom == 5 and objectsOverlap('charBox', 'upBlock') then
-			curActualPos[2] = curActualPos[2] + 60;
-			hitErr = true;
-			
-			triggerErr();
-		else
-			curActualPos[2] = curActualPos[2] - 30;
-		end
+		curActualPos[2] = curActualPos[2] - 30;
 		
 		return true;
 	end,
@@ -1327,6 +1548,108 @@ function checkHitEvent()
 	end
 end
 
+local suit = {
+	phase = 1,
+	phTime = 0,
+	
+	maxTime = {
+		[1] = 100,
+		[2] = 100,
+		[3] = 200,
+		[4] = 300,
+		[5] = 200,
+		[6] = 200,
+		[7] = 9999
+	},
+	
+	onPhase = {
+		[2] = function()
+			playAnim('suit', 'up', true);
+		end,
+		[3] = function()
+			playAnim('suit', 'laugh', true);
+		end,
+		[4] = function()
+			playAnim('suit', 'lock', true);
+			
+			killSounds();
+			doSound('crush', 1, 'manSnd');
+		end,
+		[5] = function()
+			playAnim('suit', 'kneel', true);
+			doSound('insuit', 1, 'manSnd');
+			
+			doTweenAlpha('fadeChar', 'char', 0, pl(5.19));
+			for i = 1, 4 do
+				doTweenAlpha('fadeChild' .. i, 'child' .. i, 0, pl(5.19));
+			end
+		end,
+		[6] = function()
+			playAnim('suit', 'lay', true);
+		end,
+		[7] = function()
+			switchState('End');
+		end
+	}
+};
+function updateSuit(e)
+	local t = (e * 60);
+	
+	suit.phTime = suit.phTime + t;
+	while suit.phTime >= suit.maxTime[suit.phase] do
+		suit.phTime = 0;
+		
+		suit.phase = suit.phase + 1;
+		suit.onPhase[suit.phase]();
+	end
+	
+	bleeding = (suit.phase == 4 and suit.phTime < 100);
+	updateBrud(e, t);
+end
+
+function suitFrame(n, f)
+	if n == 'laugh' and f == 1 then
+		doSound('laugh', 1, 'manSnd');
+	end
+end
+
+function updateBrud(e, t)
+	local decel = (896 * t);
+	local yAdd = (10 * t);
+	for i, b in pairs(brudGrp) do
+		upABrud(i, b, t, decel, yAdd);
+	end
+end
+
+local bAm = 0x0000FFFF;
+function upABrud(i, b, t, d, y)
+	b.offY = b.offY + y;
+	b.mSpd = max(b.mSpd - d, 0);
+	
+	if b.mSpd == 0 then
+		removeLuaSprite(b.tag);
+		brudGrp[i] = nil;
+		
+		return;
+	end
+	
+	local acSpd = rshift(b.mSpd, 8);
+	local speedShift = floor(acSpd * t * 32);
+	
+	local x = (b.off[1] * 65536) + band(b.cal[1], bAm);
+	local y = (b.off[2] * 65536) + band(b.cal[2], bAm);
+	x = x + (b.trg[1] * speedShift);
+	y = y + (b.trg[2] * speedShift);
+	
+	b.cal[1] = band(x, bAm);
+	b.off[1] = floor(x / 65536);
+	
+	b.cal[2] = band(y, bAm);
+	b.off[2] = floor(y / 65536);
+	
+	setPos(b.tag, b.off[1], b.off[2] + b.offY);
+end
+
 local offForApart = {
 	{0, 66},
 	{2, 8},
@@ -1334,7 +1657,9 @@ local offForApart = {
 	{10, 32}
 };
 local tryingMan = false;
-function updateMan(e, t)
+
+local manLook = '';
+function updateMan(e)
 	if tryingMan then
 		if yRoom < 4 then
 			tryingMan = false;
@@ -1362,9 +1687,193 @@ function updateMan(e, t)
 			setAlpha('char', 0);
 			setAlpha(p, 1);
 			setPos(p, pos[1] + off[1] + 1, pos[2] + off[2] + 1);
+			setObjectOrder(p, 0);
 			
 			runTimer('endScene', pl(100 / 60));
 		end
+	end
+	
+	if trigFinal then updateManFinal(e); end
+end
+
+function manEndAdd(d, e, f)
+	local p = (d .. 'Time');
+	
+	manEnd[p] = manEnd[p] + e;
+	while manEnd[p] >= 0.1 do
+		manEnd[p] = manEnd[p] - 0.1;
+		f();
+	end
+end
+
+function manMoveEnd(d)
+	moveEnd[d]();
+end
+
+local endPhaseUp = {
+	[0] = function(e)
+		manEnd.hitPhase = false;
+		
+		local manX = getX('manFinal');
+		local at = curActualPos[1];
+		
+		if manX < at + 200 and manX < 900 then
+			manEndAdd('right', e, function()
+				addX('manFinal', 50);
+				doSound('run', 1, 'manSnd');
+			end);
+		end
+		
+		if getX('manFinal') > 900 then
+			manEnd.phase = 1;
+		end
+	end,
+	[1] = function(e)
+		if not manEnd.hitPhase then
+			manEnd.hitPhase = true;
+			manEnd.trips = manEnd.trips + 1;
+			
+			doSound('scare', 1, 'manScare');
+		end
+		
+		local manX = getX('manFinal');
+		local at = curActualPos[1];
+		
+		if manX > at - 200 and manX > 200 then
+			manEndAdd('moveLeft', e, function()
+				addX('manFinal', -50);
+			end);
+		end
+		
+		manX = getX('manFinal');
+		if manX <= at - 200 or manX <= 200 then
+			manEnd.phase = 2;
+			manEnd.hitPhase = false;
+			
+			return;
+		end
+		
+		manEndAdd('leftStep', e, function()
+			doSound('run', 1, 'manSnd');
+		end);
+		
+		local manY = getY('manFinal');
+		if manY > 200 then
+			manEndAdd('upLeft', e, function()
+				if getRandomBool() then
+					addY('manFinal', -50);
+				end
+			end);
+		end
+		
+		manY = getY('manFinal');
+		if manY < 600 then
+			manEndAdd('downLeft', e, function()
+				if getRandomBool() then
+					addY('manFinal', 50);
+				end
+			end);
+		end
+	end,
+	[2] = function(e) end,
+	[3] = function(e)
+		if not manEnd.hitPhase then
+			manEnd.hitPhase = true;
+			manEnd.trips = manEnd.trips + 1;
+			
+			doSound('scare', 1, 'manScare');
+		end
+		
+		local manX = getX('manFinal');
+		local at = curActualPos[1];
+		
+		if manX < at + 200 then
+			manEndAdd('moveRight', e, function()
+				addX('manFinal', 50);
+			end);
+		end
+		
+		manX = getX('manFinal');
+		if manX >= at + 200 then
+			manEnd.phase = 0;
+			manEnd.hitPhase = false;
+			
+			return;
+		end
+		
+		manEndAdd('rightStep', e, function()
+			doSound('run', 1, 'manSnd');
+		end);
+		
+		local manY = getY('manFinal');
+		if manY > 200 then
+			manEndAdd('upRight', e, function()
+				if getRandomBool() then
+					addY('manFinal', -50);
+				end
+			end);
+		end
+		
+		manY = getY('manFinal');
+		if manY < 600 then
+			manEndAdd('downRight', e, function()
+				if getRandomBool() then
+					addY('manFinal', 50);
+				end
+			end);
+		end
+	end
+};
+local manRanSuit = false;
+local manRunTime = 0;
+local manRunning = false;
+function updateManFinal(e)
+	if not manEnd.secSeq then
+		endPhaseUp[manEnd.phase](e);
+		
+		local at = curActualPos[1];
+		local x = getX('manFinal');
+		
+		local side = (x + 1 >= at);
+		if manLook ~= side then
+			manLook = side;
+			
+			playAnim('manFinal', (side and 'left' or 'right'), true);
+		end
+		
+		if manEnd.trips >= 4 then manEnd.secSeq = true; manRunning = true; end
+	end
+	
+	if manEnd.secSeq then
+		if manRunning then
+			if not manRanSuit then
+				manRanSuit = true;
+				
+				character.canMove = false;
+				
+				setPos('manFinal', topPos[1] - 335, topPos[2] + 359);
+				playAnim('manFinal', 'run', true);
+			end
+			
+			manRunTime = manRunTime + e;
+			while manRunTime >= 0.1 do
+				manRunTime = manRunTime - 0.1;
+				
+				addX('manFinal', 30);
+				
+				if pixPerfOverlap('manFinal', 'suit') then
+					manRunning = false;
+					manEnd.suitSeq = true;
+					setAlpha('manFinal', 0);
+					
+					doSound('insuit', 1, 'manSnd');
+					playAnim('suit', 'eyes', true);
+				else
+					doSound('run', 1, 'manSnd');
+				end
+			end
+		end
+		if manEnd.suitSeq then updateSuit(e); end
 	end
 end
 
@@ -1410,6 +1919,8 @@ function manRunIn()
 	setAlpha('man', 1);
 	playAnim('man', 'man', true);
 	
+	hideShadow();
+	
 	doSound('crazy garble');
 end
 
@@ -1428,6 +1939,8 @@ local shiftFunc = {
 		curActualPos = {tonumber(toGo[1] + 880), tonumber(toGo[2])};
 	end,
 	['down'] = function()
+		if trigFinal then return; end
+		
 		character.enteredDir = 3;
 		yRoom = yRoom + 1;
 		
@@ -1516,13 +2029,103 @@ function checkFollow()
 	end
 end
 
+local shadow = {
+	active = false,
+	hitEdge = false,
+	
+	dir = 'down',
+};
 function makeShadow()
-	initChar('toFollow', 'shadow');
+	makeChar('toFollow', 'shadow');
+	setAlpha('toFollow', 0.00001);
 end
 
+local shadowMoveDir = {
+	['left'] = function()
+		addX('toFollow', -30);
+	end,
+	['right'] = function()
+		addX('toFollow', 30);
+	end,
+	
+	['down'] = function()
+		addY('toFollow', 30);
+	end,
+	['up'] = function()
+		addY('toFollow', -30);
+	end
+};
+function shadowMove()
+	if not shadow.active then return; end
+	
+	shadowMoveDir[shadow.dir]();
+	shadowCheckBorder(shadow.dir);
+end
+
+local shadowCheck = {
+	['left'] = function()
+		local x = getX('toFollow') - getProperty('toFollow.offset.x');
+		
+		if not shadow.hitEdge and x <= 0 then
+			shadow.hitEdge = true;
+			runTimer('shadowGo', pl(100 / 60));
+		end
+	end,
+	['right'] = function()
+		local x = (getX('toFollow') - getProperty('toFollow.offset.x')) + getProperty('toFollow.width');
+		
+		if not shadow.hitEdge and x >= 1024 then
+			shadow.hitEdge = true;
+			runTimer('shadowGo', pl(100 / 60));
+		end
+	end,
+	
+	['up'] = function()
+		local y = getX('toFollow') - getProperty('toFollow.offset.y');
+		
+		if not shadow.hitEdge and y <= 0 then
+			shadow.hitEdge = true;
+			runTimer('shadowGo', pl(100 / 60));
+		end
+	end,
+	['down'] = function()
+		local y = (getY('toFollow') - getProperty('toFollow.offset.y')) + getProperty('toFollow.height');
+		
+		if not shadow.hitEdge and y >= 768 then
+			shadow.hitEdge = true;
+			runTimer('shadowGo', pl(100 / 60));
+		end
+	end
+};
+function shadowCheckBorder()
+	shadowCheck[shadow.dir]();
+end
+
+local shadowSpawnPos = {
+	right = {topPos[1] + 317, topPos[2] + 377};
+	left = {sidePos.left[1] + 207, sidePos.left[2] - 1};
+	
+	up = {topPos[1] + 21, topPos[2] + 203},
+	down = {sidePos.down[1] - 11, sidePos.down[2] - 207},
+};
 function showShadow(d)
+	shadow.dir = d;
+	shadow.active = true;
+	shadow.hitEdge = false;
+	
+	local pos = shadowSpawnPos[d];
+	setPos('toFollow', pos[1], pos[2]);
+	playAnim('toFollow', d, true);
+	setAlpha('toFollow', 1);
 	
 	triggerFollow();
+end
+
+function hideShadow()
+	setAlpha('toFollow', 0);
+	shadow.active = false;
+	
+	cancelTimer('shadowGo');
 end
 
 local seeFol = false;
@@ -1544,6 +2147,7 @@ local timers = {
 		
 		setAlpha('err', 0);
 		if not seeFol then setAlpha('fol', 0); end
+		if not shadow.active then setAlpha('toFollow', 0); end
 		
 		hideEverything();
 		resetRoom();
@@ -1551,11 +2155,9 @@ local timers = {
 	
 	['pOne'] = function()
 		setAlpha('static', clAlph(225 + Random(50)));
-		
-		tryMovements();
 	end,
 	['tFiv'] = function()
-		--tryMovements();
+		tryMovements();
 		
 		setAlpha('scan1', clAlph(200 + Random(100)));
 		setAlpha('scan2', clAlph(225 + Random(25)));
@@ -1567,7 +2169,7 @@ local timers = {
 		end
 	end,
 	['SMov'] = function()
-		
+		shadowMove();
 	end,
 	['hSec'] = function()
 		for i = 1, #rats do
@@ -1591,6 +2193,9 @@ local timers = {
 	end,
 	['hideErr'] = function()
 		setAlpha('err', 0);
+	end,
+	['shadowGo'] = function()
+		hideShadow();
 	end,
 	
 	['stopFlashing'] = function()
