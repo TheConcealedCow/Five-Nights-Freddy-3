@@ -10,6 +10,7 @@ function onCreate()
 			s ??= 0;
 			var grp:FlxTypedSpriteGroup<FlxSprite>;
 			grp = new FlxTypedSpriteGroup(x, y);
+			grp.camera = FlxG.camera;
 			setVar(t, grp);
 			setVar(t + '_PROPERTIES', ['curNum' => 0, 'dir' => d]);
 			

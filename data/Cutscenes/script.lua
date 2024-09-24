@@ -1630,6 +1630,7 @@ function updateBrud(e, t)
 end
 
 local bAm = 0x0000FFFF;
+local iLim = 65536; -- 16 bit int limit (for whatever reason)
 function upABrud(i, b, t, d, y)
 	b.offY = b.offY + y;
 	b.mSpd = max(b.mSpd - d, 0);
@@ -1644,16 +1645,16 @@ function upABrud(i, b, t, d, y)
 	local acSpd = rshift(b.mSpd, 8);
 	local speedShift = floor(acSpd * t * 32);
 	
-	local x = (b.off[1] * 65536) + band(b.cal[1], bAm);
-	local y = (b.off[2] * 65536) + band(b.cal[2], bAm);
+	local x = (b.off[1] * iLim) + band(b.cal[1], bAm);
+	local y = (b.off[2] * iLim) + band(b.cal[2], bAm);
 	x = x + (b.trg[1] * speedShift);
 	y = y + (b.trg[2] * speedShift);
 	
 	b.cal[1] = band(x, bAm);
-	b.off[1] = floor(x / 65536);
+	b.off[1] = floor(x / iLim);
 	
 	b.cal[2] = band(y, bAm);
-	b.off[2] = floor(y / 65536);
+	b.off[2] = floor(y / iLim);
 	
 	setPos(b.tag, b.off[1], b.off[2] + b.offY);
 end

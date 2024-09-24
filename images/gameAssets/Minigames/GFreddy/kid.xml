@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="kid.png" width="175" height="90">
+  <SubTexture name="Idle0002" x="1" y="1"  width="81" height="82" frameX="-5" frameY="-10" frameWidth="92" frameHeight="92"/>
+  <SubTexture name="Idle0001" x="84" y="1"  width="90" height="88" frameX="-1" frameY="-4" frameWidth="92" frameHeight="92"/>
+</TextureAtlas>

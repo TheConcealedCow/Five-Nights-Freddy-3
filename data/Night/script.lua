@@ -1,7 +1,3 @@
---[[
-	// TODO //
-	- minigame trigger
-]]
 local night = 'gameAssets/night/';
 local hud = night .. 'hud/';
 local office = night .. 'office/';
@@ -50,7 +46,7 @@ local seeDown = true;
 local seeRight = false;
 
 local curHour = 12;
-curNight = 7;
+curNight = 1;
 curSealed = 0;
 
 local ventTime = 0;
@@ -85,7 +81,7 @@ ventProps = {};
 
 cheats = {
 	fast = false, -- Fast Nights
-	radar = false, -- Radar
+	radar = true, -- Radar
 	hyper = false, -- Hyper
 	noErr = false -- No Errors
 };
@@ -105,6 +101,24 @@ local scrollShake = {
 	off = 512,
 	cal = 0,
 };
+
+local offKeyPos = {
+	{875, 475}, {939, 476}, {1003, 478},
+	{875, 542}, {939, 545}, {1003, 545},
+	{875, 606}, {939, 611}, {1003, 614}
+};
+local arcadeKeyPos = {
+	{1534, 345}, {1557, 339},
+	{1530, 364}, {1554, 359}
+};
+
+local cupInCam = {
+	[2] = true,
+	[3] = true,
+	[4] = true,
+	[6] = true
+};
+local totCups = 4;
 
 local timeSubVent = {[2] = 12, [3] = 10, [4] = 9, [5] = 8, [6] = 6};
 local scriptToAdd = {'marionette', 'goldenFreddy', 'mangle', 'chica', 'foxy', 'bb', 'springtrap'};
@@ -376,6 +390,8 @@ function makeOffice() -- buttons are 120, arcade buttons are 190
 	setCam('office');
 	addLuaSprite('office');
 	
+	makeButtonOffice();
+	
 	makeAnimatedLuaSprite('fan', office .. 'o/fan', 1284 - 106, 450 - 170);
 	addAnimationByPrefix('fan', 'fan', 'Fan', 30);
 	playAnim('fan', 'fan', true);
@@ -478,6 +494,22 @@ function makeOffice() -- buttons are 120, arcade buttons are 190
 	makeLuaSprite('noseBox', HITBOX, 672 - 6, 270 - 6);
 	scaleObject('noseBox', 13, 13);
 	setCam('noseBox');
+end
+
+function makeButtonOffice()
+	if curNight ~= 4 then return; end
+	
+	for i = 1, #offKeyPos do
+		local t = 'keyOffice' .. i;
+		local p = offKeyPos[i];
+		
+		makeLuaSprite(t, nil, p[1] - 30, p[2] - 30);
+		makeGraphic(t, 1, 1, '000008');
+		scaleObject(t, 64, 64);
+		setCam(t, 'mainCam');
+		addLuaSprite(t);
+		setAlpha(t, 0.00001);
+	end
 end
 
 function makePaperpals()
@@ -683,6 +715,8 @@ local static = {
 };
 function makeViewHud()
 	makeCams();
+	makeArcadeKey();
+	makeCups();
 	
 	makeLuaSprite('bbPeek', viewHud .. 'cams/bb', 1148, 90);
 	setCam('bbPeek', 'camCam');
@@ -757,6 +791,44 @@ function makeViewHud()
 	
 	makeSelView();
 	makeMarkers();
+end
+
+function makeArcadeKey()
+	if curNight ~= 2 then return; end
+	
+	for i = 1, 4 do
+		local b = arcadeKeyPos[i];
+		local t = 'keyArc' .. i;
+		
+		makeLuaSprite(t, viewHud .. 'cams/circ', b[1] - 11, b[2] - 9);
+		addToGrp(t, 'mainCamsGrp');
+		setAlpha(t, 0.00001);
+	end
+end
+
+local cupToMake = {
+	{3, 1, {1678 - 30, 360 - 59}},
+	{6, 1, {1440 - 30, 314 - 59}},
+	{2, 3, {1552 - 15, 426 - 30}},
+	{4, 4, {1456 - 20, 430 - 39}}
+};
+function makeCups()
+	if curNight ~= 3 then 
+		for i in pairs(cupInCam) do
+			cupInCam[i] = false;
+		end
+		
+		return;
+	end
+	
+	for i = 1, #cupToMake do
+		local c = cupToMake[i];
+		local t = 'cupScrn' .. c[1];
+		
+		makeLuaSprite(t, viewHud .. 'cams/cup/' .. c[2], c[3][1], c[3][2]);
+		addToGrp(t, 'mainCamsGrp');
+		setAlpha(t, 0.00001);
+	end
 end
 
 local addForCam = {
@@ -1026,7 +1098,7 @@ function makeMarkers()
 		addToGrp(n, grp);
 	end
 	
-	makeAnimatedLuaSprite('lureSpr', viewHud .. 'cams/markers/radar', 200, 200);
+	makeAnimatedLuaSprite('lureSpr', viewHud .. 'cams/markers/radar', 1500, 200);
 	addAnimationByPrefix('lureSpr', 'lure', 'Radar', 1, false);
 	addOffset('lureSpr', 'lure', 108, 43);
 	setFrameRate('lureSpr', 'lure', 1.8);
@@ -1035,7 +1107,7 @@ function makeMarkers()
 	addToGrp('lureSpr', 'mainCamsMark');
 	
 	if cheats.radar then
-		makeLuaSprite('spPos', viewHud .. 'spPos', 200, 200);
+		makeLuaSprite('spPos', viewHud .. 'spPos', 1300, 200);
 		addToOffsets('spPos', 6, 6);
 		setCam('spPos', 'camCam');
 		addLuaSprite('spPos');
@@ -1252,7 +1324,7 @@ function updateStatic(e, t)
 			s.E = 200;
 		end
 		
-		local toLook = (actualLooking > 11 and ventProps[curVent] or cameraProps[curCam]);
+		local toLook = (actualLooking > 10 and ventProps[curVent] or cameraProps[curCam]);
 		if toLook.trails > 0 then s.E = 250; end
 	end
 	
@@ -1366,24 +1438,67 @@ function officeClick()
 end
 
 local clickDark = 0;
-function checkHitOffice() -- fred nose, dark, and numpad
-	if mouseOverlaps('noseBox', 'mainCam') then
-		doSound('PartyFavorraspyPart_AC01__3', 1, 'honkSnd');
-		
-		return;
-	end
-	
-	if curNight == 5 then
+local codeOffice = {
+	3,
+	9,
+	5,
+	2,
+	4,
+	8
+};
+local curCodeOff = {};
+local codeNum = 1;
+local nightClickOffice = {
+	[4] = function()
+		for i = 1, #offKeyPos do
+			local t = 'keyOffice' .. i;
+			if mouseOverlaps(t, 'mainCam') then
+				setVis(t, true);
+				runTimer('visButton_' .. t, pl(5 / 60));
+				
+				if i == 3 then codeNum = 1; end
+				clickCodeOffice(i);
+				
+				break;
+			end
+		end
+	end,
+	[5] = function()
 		if mouseOverlaps('dark', 'mainCam') then
 			clickDark = clickDark + 1;
 			if waitingDouble and clickDark >= 2 then
-				clickDark = 0;
-				--switchState('RWQFSFASXC');
+				switchState('RWQFSFASXC');
 			end
 		else
 			clickDark = 0;
 		end
 	end
+};
+function checkHitOffice()
+	if mouseOverlaps('noseBox', 'mainCam') then
+		doSound('PartyFavorraspyPart_AC01__3', 1, 'honkSnd');
+		return;
+	end
+	
+	local n = nightClickOffice[curNight];
+	if n then n(); end
+end
+
+function clickCodeOffice(i)
+	curCodeOff[codeNum] = i;
+	codeNum = (codeNum % 6) + 1;
+	
+	checkCodeOffice();
+end
+
+function checkCodeOffice()
+	if #curCodeOff < 6 then return; end
+	
+	for i = 1, 6 do
+		if curCodeOff[i] ~= codeOffice[i] then return; end
+	end
+	
+	switchState('GFreddy');
 end
 
 function updatePanel(e, t)
@@ -1516,18 +1631,79 @@ end
 local totTapCam = 0;
 local camTapped = 0;
 local toggleCooled = true;
+
+local arcCode = 0;
+
+local bbClick = 0;
+local pupClick = 0;
 local updateFuncView = {
+	[2] = function()
+		if cupInCam[2] and mouseClicked() and mouseOverlaps('cupScrn2', 'mainCam') then
+			killACake(2);
+		end
+	end,
+	[3] = function()
+		if mouseClicked() then
+			if mouseOverlaps('puppetDouble', 'mainCam') then
+				pupClick = pupClick + 1;
+				if waitingDouble and pupClick >= 2 then
+					switchState('Marion');
+				end
+			else
+				pupClick = 0;
+			end
+			
+			if cupInCam[3] and mouseOverlaps('cupScrn3', 'mainCam') then
+				killACake(3);
+			end
+		end
+	end,
 	[4] = function(e, t)
+		if cupInCam[4] and mouseClicked() and mouseOverlaps('cupScrn4', 'mainCam') then
+			killACake(4);
+		end
+		
 		if cameraProps[4].curIn == 'mangle' then
 			mangleUpdateView(e, t);
 		end
 	end,
+	[6] = function()
+		if mouseClicked() and cupInCam[6] and mouseOverlaps('cupScrn6', 'mainCam') then
+			killACake(6);
+		end
+	end,
 	[7] = function(e, t)
+		if curNight == 2 and mouseClicked() then
+			for i = 1, 4 do
+				local t = 'keyArc' .. i;
+				if mouseOverlaps(t, 'mainCam') then
+					setExists(t, true);
+					runTimer('visButton_' .. t, pl(4 / 60));
+					
+					if i == 1 then arcCode = 1; end
+					checkCodeArc(i);
+					
+					break;
+				end
+			end
+		end
+		
 		if cameraProps[7].curIn == 'chica' then
 			chicaUpdateView(e, t);
 		end
 	end,
 	[8] = function(e, t)
+		if mouseClicked() then
+			if mouseOverlaps('bbDouble', 'mainCam') then
+				bbClick = bbClick + 1;
+				if waitingDouble and bbClick >= 2 then
+					switchState('BB');
+				end
+			else
+				bbClick = 0;
+			end
+		end
+		
 		if cameraProps[8].curIn == 'puppet' then
 			marionUpdateView(e, t);
 		end
@@ -1550,6 +1726,31 @@ function updateView(e, t)
 	if up then up(e, t); end
 	
 	setSoundVolume('statSnd', (static.A / (curNight == 1 and 8 or 5)) / 100);
+end
+
+local funcArcKey = {
+	[2] = function()
+		arcCode = (arcCode == 2 and 3 or 0);
+	end,
+	[3] = function()
+		arcCode = (arcCode == 1 and 2 or 0);
+	end,
+	[4] = function()
+		if arcCode == 3 then switchState('Mangle'); end
+	end
+};
+function checkCodeArc(i)
+	if i == 1 then return; end
+	funcArcKey[i]();
+end
+
+function killACake(i)
+	removeLuaSprite('cupScrn' .. i);
+	
+	static.E = 200;
+	cupInCam[i] = false;
+	totCups = totCups - 1;
+	if totCups == 0 then switchState('ToyChica'); end
 end
 
 function mouseClickView()
@@ -1625,6 +1826,8 @@ function toggleView()
 	setVis('mainCamsGrp', view);
 	setVis('mainCamsMark', view);
 	setVis('lureGrp', view);
+	
+	actualLooking = (view and curCam or curVent);
 	
 	stopSeal();
 	updateACam();
@@ -1707,6 +1910,9 @@ function switchCamAndOld(c, o)
 	
 	playAnim('mark' .. o, 'idle');
 	playAnim('mark' .. c, 'glow');
+	
+	if cupInCam[o] then setAlpha('cupScrn' .. o, 0); end
+	if cupInCam[c] then setAlpha('cupScrn' .. c, 1); end
 end
 
 function updateACam()
@@ -2368,6 +2574,11 @@ local timers = {
 		setAlpha('scare1', 0);
 		setAlpha('scare2', 0);
 		
+		if curNight == 1 then
+			setPos('spPos', 0, 0);
+			setAlpha('spPos', 0);
+		end
+		
 		setAlpha('mangleWindow', 0);
 		
 		setAlpha('foxyOffice', 1);
@@ -2395,6 +2606,8 @@ local timers = {
 		setAlpha('puppetHead', 0);
 		
 		setAlpha('whiteFlash', 0);
+		
+		setAlpha('lureSpr', 0);
 		
 		setX('camCam', 0);
 		
@@ -2428,12 +2641,28 @@ local timers = {
 		
 		setAlpha('winCam', 0);
 		
+		if curNight == 2 then
+			for i = 1, 4 do
+				local t = 'keyArc' .. i;
+				setAlpha(t, clAlph(190));
+				setExists(t, false);
+			end
+		elseif curNight == 4 then
+			for i = 1, #offKeyPos do
+				local t = 'keyOffice' .. i;
+				setAlpha(t, clAlph(120));
+				setVis(t, false);
+			end
+		end
+		
 		for i = 1, 15 do
 			if i == curCam or i == curVent then
 				setAlpha('camScreen' .. i, 1);
 				playAnim('mark' .. i, 'glow');
+				if cupInCam[i] then setAlpha('cupScrn' .. i, 1); end
 			else
 				setAlpha('camScreen' .. i, 0);
+				if cupInCam[i] then setAlpha('cupScrn' .. i, 0); end
 			end
 		end
 	end,
@@ -2530,6 +2759,17 @@ function onTimerCompleted(t)
 		if timersWin[t] then timersWin[t](); end
 	
 		return Function_StopLua;
+	end
+	
+	if t:find('visButton_') then
+		local o = t:gsub('visButton_', '');
+		if o:find('keyArc') then
+			setExists(o, false);
+		else
+			setVis(o, false);
+		end
+		
+		return;
 	end
 	
 	if timers[t] then timers[t](); end

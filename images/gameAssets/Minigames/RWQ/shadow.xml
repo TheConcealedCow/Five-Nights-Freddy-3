@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="shadow.png" width="343" height="372">
+  <SubTexture name="Bug0001" x="1" y="1"  width="125" height="171" frameX="-4" frameY="-0" frameWidth="130" frameHeight="187"/>
+  <SubTexture name="Bug0004" x="128" y="1"  width="124" height="178" frameX="-0" frameY="-9" frameWidth="130" frameHeight="187"/>
+  <SubTexture name="Idle0001" x="254" y="1"  width="88" height="185" frameX="-27" frameY="-0" frameWidth="130" frameHeight="187"/>
+  <SubTexture name="Bug0003" x="1" y="174"  width="125" height="186" frameX="-4" frameY="-0" frameWidth="130" frameHeight="187"/>
+  <SubTexture name="Bug0002" x="128" y="188"  width="130" height="183" frameX="-0" frameY="-2" frameWidth="130" frameHeight="187"/>
+</TextureAtlas>

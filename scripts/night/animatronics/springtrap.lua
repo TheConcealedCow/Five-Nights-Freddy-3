@@ -44,6 +44,20 @@ local r = {
 		[15] = {200, 2}
 	};
 };
+local offForCam = {
+	[2] = {-15, 3},
+	[5] = {1, -16},
+	[13] = {33, -2},
+	[15] = {18, 10}
+};
+local gotPos = {
+	[25] = {1802, 615},
+	[30] = {1762, 615},
+	[35] = {1698, 614},
+	[40] = {1721, 667},
+	[100] = {1772, 710},
+	[200] = {1811, 710}
+};
 local curHour = 12;
 local curNight = 1;
 function onCreate()
@@ -83,6 +97,15 @@ function setSpringCam(c)
 	
 	if c > 0 and c < 16 then
 		setCamProp(getProp(c), c, 'spIn', true);
+	end
+	
+	if c > 16 then
+		local newPos = gotPos[c];
+		setPos('spPos', newPos[1], newPos[2]);
+	else
+		local newPos = getPos('mark' .. c);
+		local off = (offForCam[c] or {0, 0});
+		setPos('spPos', (newPos[1] + 29) + off[1], (newPos[2] + 19) + off[2]);
 	end
 	
 	r.cam = c;

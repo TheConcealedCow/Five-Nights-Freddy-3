@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="2.png" width="152" height="126">
+  <SubTexture name="Rest0001" x="1" y="1"  width="64" height="57" frameX="-0" frameY="-0" frameWidth="64" frameHeight="57"/>
+  <SubTexture name="Idle0001" x="67" y="1"  width="84" height="124" frameX="-35" frameY="-3" frameWidth="122" frameHeight="127"/>
+</TextureAtlas>

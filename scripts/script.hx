@@ -74,6 +74,17 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 		return [cam.x, cam.y];
 	},
 	
+	'setScroll' => function(?c, x, y) {
+		var o = getVar(c);
+		o ??= FlxG.camera;
+		o.scroll.set(x, y);
+	},
+	
+	'setBounds' => function(w, h) {
+		FlxG.worldBounds.width = w + 20;
+		FlxG.worldBounds.height = h + 20;
+	},
+	
 	'camMouseX' => function() return FlxG.mouse.getScreenPosition(debugCam).x
 	'camMouseY' => function() return FlxG.mouse.getScreenPosition(debugCam).y
 	
@@ -107,7 +118,7 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	
 	'setColor' => function(o, c) LuaUtils.getObjectDirectly(o).color = c
 	
-	'getVis' => function(o, v) return LuaUtils.getObjectDirectly(o).visible
+	'getVis' => function(o) return LuaUtils.getObjectDirectly(o).visible
 	'setVis' => function(o, v) LuaUtils.getObjectDirectly(o).visible = v
 	
 	'setVel' => function(o, x, y) LuaUtils.getObjectDirectly(o).velocity.set(x, y)
