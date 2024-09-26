@@ -51,6 +51,8 @@ function create()
 	k1 = getDataFromSave(sv, 'k1', false);
 	cake = getDataFromSave(sv, 'cake', false);
 	
+	setDataFromSave(sv, 'fromExtra', false);
+	
 	setBounds(3072, 2304);
 	
 	makeGame();
@@ -190,7 +192,6 @@ function updateCharPos()
 	
 	if cake and objectsOverlap('charBox', 'cake') and pixPerfOverlap('charBox', 'cake') then
 		cake = false;
-		
 		gameStopped = true;
 		killSounds();
 		setVis('cake', true);
@@ -533,7 +534,7 @@ function updateMove(e, t)
 			updateCharPos();
 		end
 		
-		if onAnything('topBox') then
+		if onBackdrop('topBox') then
 			c.jumpNum = 0;
 		end
 	end
@@ -568,7 +569,7 @@ end
 
 function checkMoveChar(d, b, e, f)
 	local t = b .. 'Time';
-	if keyboardPressed(d) and not onAnything(b .. 'Box') then
+	if keyboardPressed(d) and not onBackdrop(b .. 'Box') then
 		c[t] = c[t] + e;
 		while c[t] >= 0.1 do
 			c[t] = c[t] - 0.1;

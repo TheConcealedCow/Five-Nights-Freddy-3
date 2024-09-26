@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="star.png" width="32" height="32">
+  <SubTexture name="Glow0001" x="1" y="1"  width="14" height="14" frameX="-0" frameY="-0" frameWidth="14" frameHeight="14"/>
+  <SubTexture name="Glow0002" x="17" y="1"  width="14" height="14" frameX="-0" frameY="-0" frameWidth="14" frameHeight="14"/>
+  <SubTexture name="Glow0003" x="1" y="17"  width="14" height="14" frameX="-0" frameY="-0" frameWidth="14" frameHeight="14"/>
+  <SubTexture name="Glow0004" x="17" y="17"  width="14" height="14" frameX="-0" frameY="-0" frameWidth="14" frameHeight="14"/>
+</TextureAtlas>
