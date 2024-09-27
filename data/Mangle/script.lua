@@ -630,7 +630,7 @@ function updateMove(e, t)
 				c.jumpNum = 7;
 			end
 			
-			doSound('jump', 1, 'mangSnd');
+			doSound('jump2', 1, 'mangSnd');
 		end
 	else
 		c.canJump = true;
@@ -741,7 +741,7 @@ function toFrame()
 end
 
 function cacheSounds()
-	precacheSound('jump');
+	precacheSound('jump2');
 	precacheSound('get');
 	precacheSound('land');
 end

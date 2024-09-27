@@ -731,7 +731,7 @@ end
 function onBalloon(o)
 	if not finBB then return false; end
 	
-	for i = 1, 8 do
+	for i = 1, 2 do
 		local t = 'balloon' .. i;
 		if objectsOverlap(o, t) and pixPerfOverlap(o, t) then return true; end
 	end
