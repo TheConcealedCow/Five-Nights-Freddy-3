@@ -269,6 +269,11 @@ function create()
 	
 	addLuaScript('scripts/objects/COUNTERDOUBDIGIT');
 	
+	cheats.fast = getDataFromSave(sv, 'fast', false);
+	cheats.radar = getDataFromSave(sv, 'radar', false);
+	cheats.hyper = getDataFromSave(sv, 'hyper', false);
+	cheats.noErr = getDataFromSave(sv, 'noErr', false);
+	
 	curNight = getDataFromSave(sv, 'night', 1);
 	
 	calcAI();
@@ -333,8 +338,7 @@ function checkHalloween()
 	local month = d.month;
 	local day = d.day;
 	
-	--isHalloween = (month == 10 and day == 31); -- this is halloween
-	isHalloween = true;
+	isHalloween = (month == 10 and day == 31); -- this is halloween
 end
 
 local fg = {
@@ -348,7 +352,7 @@ local fg = {
 	ended = true
 };
 foxyPos = {1284 - 586, 450 + 318};
-function makeOffice() -- buttons are 120, arcade buttons are 190
+function makeOffice()
 	makeLuaSprite('bg', office .. 'backdrop');
 	setCam('bg');
 	addLuaSprite('bg');

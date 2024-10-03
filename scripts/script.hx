@@ -7,6 +7,7 @@ import openfl.Lib;
 import backend.Mods;
 import flixel.util.FlxSave;
 import backend.CoolUtil;
+import flixel.tweens.FlxTween;
 import flixel.sound.FlxSound;
 import flixel.math.FlxMath;
 import flixel.addons.transition.FlxTransitionableState;
@@ -25,12 +26,15 @@ final saveName:String = 'FNAF3';
 final title:String = "Five Nights at Freddys 3";
 
 var debugCam;
+var lastVol:Float = FlxG.sound.volume;
 
 final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	'switchState' => function(name) nextState(name)
     'exitGame' => function() exit()
 	
 	'killSounds' => function() killSounds()
+	'stopAnims' => function() stopAnims()
+	'stopTmrTwn' => function() stopTmrTwn()
 	'stopGame' => function() stopGame()
 	
 	'bound' => function(x, a, b) return FlxMath.bound(x, a, b)
@@ -94,8 +98,16 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 	'setX' => function(o, x) LuaUtils.getObjectDirectly(o).x = x
 	'setY' => function(o, y) LuaUtils.getObjectDirectly(o).y = y
 	
-	'addX' => function(o, x) LuaUtils.getObjectDirectly(o).x += x
-	'addY' => function(o, y) LuaUtils.getObjectDirectly(o).y += y
+	'addX' => function(o, x) {
+		var obj = LuaUtils.getObjectDirectly(o);
+		obj.x += x;
+		obj.last.x = obj.x;
+	},
+	'addY' => function(o, y) {
+		var obj = LuaUtils.getObjectDirectly(o);
+		obj.y += y;
+		obj.last.y = obj.y;
+	},
 	
 	'setPos' => function(o, x, y) {
 		var obj = LuaUtils.getObjectDirectly(o);
@@ -188,6 +200,8 @@ function onCreatePost() {
     game.inCutscene = true;
     game.canPause = false;
 	
+	FlxG.sound.volume *= 0.7;
+	
 	setVar('canEsc', true);
 
     // kills every object in playstate so that the draw and update calls are reduced
@@ -200,8 +214,6 @@ function onCreatePost() {
     FlxG.mouse.visible = true;
 	FlxG.mouse.useSystemCursor = true;
 	
-	FlxG.camera.active = true;
-	FlxG.camera.bgColor = 0xFF000000;
 	
     // if you wanna change the game's resolution
     resize(1024, 768);
@@ -220,6 +232,7 @@ function onCreatePost() {
     // resets the game to have only one camera
     FlxG.cameras.reset();
     FlxG.camera.active = true;
+	FlxG.camera.bgColor = 0xFF000000;
 
     game.luaDebugGroup.revive();
 
@@ -255,6 +268,7 @@ function nextState(name:String) {
         "needsVoices": false
     }').doParse();
 	
+	FlxG.sound.volume = lastVol;
     FlxG.resetState();
 }
 
@@ -263,6 +277,8 @@ function onUpdate(elapsed:Float) {
 }
 
 function exit() {
+	FlxG.sound.volume = lastVol;
+	
     game.modchartSaves.get(saveName).flush();
     FlxG.autoPause = autoPause;
     FlxTransitionableState.skipNextTransIn = false;
@@ -319,12 +335,18 @@ function resize(?width:Int, ?height:Int) {
 	}
 }
 
-function stopGame() {
-	for (obj in game.members) if (Std.isOfType(obj, FlxSprite) && obj.active) obj.active = false; // copy pasted this part from Rudy!!
-	FlxTimer.globalManager.forEach(function(tmr:FlxTimer) tmr.active = false);
-	
+function stopGame() { // copy pasted this part from Rudy!!
+	stopTmrTwn();
+	stopAnims();
 	killSounds();
 }
+
+function stopTmrTwn() {
+	FlxTimer.globalManager.forEach(function(tmr:FlxTimer) tmr.active = false);
+	FlxTween.globalManager.forEach(function(twn:FlxTween) twn.active = false);
+}
+
+function stopAnims() for (obj in game.members) if (Std.isOfType(obj, FlxSprite) && obj.active) obj.active = false;
 
 function killSounds() {
 	// manually destroying all of the sounds cuz `FlxG.sound.destroy(true);` crashes the game

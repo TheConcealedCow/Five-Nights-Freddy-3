@@ -12,6 +12,7 @@ local cake = false;
 local gameStopped = false;
 local won = false;
 local finBB = false;
+local canExit = false;
 
 local wonTime = 0;
 local balloons = 8;
@@ -427,7 +428,6 @@ local collect = {
 	{548, 252},
 	{786, 230}
 };
-local canExit = false;
 function makeGoal()
 	if not k1 then
 		makeAnimatedLuaSprite('kid', main .. 'secret/win/child', 2484 - 44, 1106 - 45);

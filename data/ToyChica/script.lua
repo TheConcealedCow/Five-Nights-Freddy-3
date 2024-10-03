@@ -12,6 +12,7 @@ local cake = false;
 local gameStopped = false;
 local won = false;
 local finBB = false;
+local canExit = false;
 
 local curCups = 0;
 
@@ -519,7 +520,6 @@ local children = {
 	{1678, 1154},
 	{1224, 1356}
 };
-local canExit = false;
 function makeGoal()
 	if not k2 then
 		makeAnimatedLuaSprite('kid', main .. 'secret/win/child', 271 - 44, 1014 - 45);

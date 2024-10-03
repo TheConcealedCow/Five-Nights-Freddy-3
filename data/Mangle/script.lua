@@ -12,6 +12,7 @@ local gameStopped = false;
 local takenApart = false;
 local won = false;
 local finBB = false;
+local canExit = false;
 
 local wonTime = 0;
 local totParts = 0;
@@ -477,7 +478,6 @@ function makeEdges()
 	addLuaSprite('rightEdge');
 end
 
-local canExit = false;
 function makeGoal()
 	makeLuaSprite('shadow', mang .. 'mangle/shadow');
 	addLuaSprite('shadow');
@@ -553,6 +553,8 @@ function onTick()
 end
 
 function updateKid(e, t)
+	if gameStopped then return; end
+	
 	local vel = (kidVel * e) * kidMult;
 	kidMoveX = kidMoveX - vel;
 	if kidMoveX < -1395 then

@@ -366,7 +366,7 @@ function onUpdatePost(e)
 		updateMove(e);
 		updateGlitch(e);
 		
-		callOnLuas('updateFunc', {e, ti, ticks});
+		callOnLuas('updateFunc', {e, ti});
 	end
 	
 	if won then
