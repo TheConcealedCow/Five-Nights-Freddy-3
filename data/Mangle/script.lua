@@ -575,6 +575,7 @@ function updateKid(e, t)
 	if objectsOverlap('kid', 'charBox') and pixPerfOverlap('kid', 'charBox') then
 		setFrameRate('kid', kidDir, 0);
 		
+		killSounds();
 		takenApart = true;
 		gameStopped = true;
 		won = true;
