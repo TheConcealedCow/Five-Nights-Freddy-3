@@ -1,7 +1,11 @@
 local going = false;
+local isDemo = true; -- dont tell anyone you can set this false
+local sv = 'FNAF3';
 function create()
 	makeLuaSprite('warn', 'gameAssets/warn/warn', 292, 308);
 	addLuaSprite('warn');
+	
+	setDataFromSave(sv, 'isDemo', isDemo);
 	
 	runTimer('forceGo', pl(2));
 end

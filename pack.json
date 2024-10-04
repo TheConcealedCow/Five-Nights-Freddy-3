@@ -1,8 +1,8 @@
 {
-	"name": "Cinco Noches con Alfredo Dos (2)",
+	"name": "Five Nights At Freddys 3 \"Demo\"",
 	"description": "I love fnaf",
 	"restart": false,
 	"runsGlobally": false,
-	"color": [255, 255, 255],
+	"color": [85, 105, 0],
 	"discordRPC": null
 }
