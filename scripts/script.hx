@@ -25,6 +25,8 @@ FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut
 final saveName:String = 'FNAF3';
 final title:String = "Five Nights at Freddys 3";
 
+final trueSave:String = 'save_' + saveName;
+
 var debugCam;
 var lastVol:Float = FlxG.sound.volume;
 
@@ -180,17 +182,19 @@ final luaFunctions:StringMap<Dynamic> = [ // Rudy cried here
 		
 		var so = FlxG.sound.load(Paths.sound(s), v, l, grp, true, false, null, function() {
 			if (t != null && !l) {
-				var s = game.modchartSounds.get(t);
-				if (s != null) game.modchartSounds.remove(t);
-	
+				var realSnd = 'sound_' + t;
+				var s = game.variables.get(realSnd);
+				if (s != null) game.variables.remove(realSnd);
+				
 				game.callOnLuas('onSoundFinished', [t]);
 			}
 		});
 		so.pitch = game.playbackRate;
 		if (t != null) {
-			if (game.modchartSounds.exists(t)) game.modchartSounds.get(t).stop();
+			var realSnd = 'sound_' + t;
+			if (game.variables.exists(realSnd)) game.variables.get(realSnd).stop();
 			
-			game.modchartSounds.set(t, so);
+			game.variables.set(realSnd, so);
 		}
 		so.play();
 	}
@@ -206,8 +210,9 @@ function onCreatePost() {
 
     // kills every object in playstate so that the draw and update calls are reduced
     for (obj in game.members) {
-        obj.alive = false;
-        obj.exists = false;
+		obj.active = false;
+		obj.alive = false;
+		obj.exists = false;
     }
 
     FlxG.autoPause = false;
@@ -237,19 +242,15 @@ function onCreatePost() {
     game.luaDebugGroup.revive();
 
     // initializes the main save
-    if (!game.modchartSaves.exists(saveName)) {
+    if (!game.variables.exists(trueSave)) {
         final save:FlxSave = new FlxSave();
         save.bind(saveName, CoolUtil.getSavePath() + '/conCowPorts');
-        game.modchartSaves.set(saveName, save);
+        game.variables.set(trueSave, save);
     }
 
     if (Lib.application.window.title != title) Lib.application.window.title = title;
 
-    for (func in luaFunctions.keys()) {
-		for (file in game.luaArray) if (file.lua != null) Lua_helper.add_callback(file.lua, func, luaFunctions.get(func));
-		
-		FunkinLua.customFunctions.set(func, luaFunctions.get(func));
-    }
+    for (func in luaFunctions.keys()) createGlobalCallback(func, luaFunctions.get(func));
 
 	callStateFunction('create');
 	
@@ -259,7 +260,7 @@ function onCreatePost() {
 }
 
 function nextState(name:String) {
-    game.modchartSaves.get(saveName).flush();
+    game.variables.get(trueSave).flush();
 
     PlayState.SONG = new JsonParser('{
         "notes": [],
@@ -279,7 +280,7 @@ function onUpdate(elapsed:Float) {
 function exit() {
 	FlxG.sound.volume = lastVol;
 	
-    game.modchartSaves.get(saveName).flush();
+	game.variables.get(trueSave).flush();
     FlxG.autoPause = autoPause;
     FlxTransitionableState.skipNextTransIn = false;
 

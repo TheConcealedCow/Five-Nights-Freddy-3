@@ -1,21 +1,20 @@
 #pragma header
 
-const int Zoom = 150;
-const float p = 3.1415;
+#define p 3.1415
+#define hP 1.57075
+
+const vec2 res = vec2(1046., 775.);
+const float Zoom = 150.;
 vec2 uv = openfl_TextureCoordv;
 vec2 iResolution = openfl_TextureSize;
 void main() { // PANORAMA
-	float sY = iResolution.y / 790;
+	vec2 uv = openfl_TextureCoordv;
+	vec2 fragCoord = (uv * res);
 	
-	vec2 fragCoord = floor(uv * iResolution);
-    float CurrentSinStep = ((fragCoord.x - (iResolution.x / 2)) / (iResolution.x / p)) + (p / 2);
-    float CurrentHeight = max(1, iResolution.y + sin(CurrentSinStep) * Zoom - Zoom);
-    float yThing = iResolution.y / 2 - CurrentHeight / 2;
-	float newY = uv.y - ((uv.y - 0.5) * (yThing * 2 / iResolution.y) * sY);
+	float CurrentSinStep = ((fragCoord.x - (res.x / 2.)) / (res.x / p)) + hP;
+    float CurrentHeight = (max(1., res.y + sin(CurrentSinStep) * Zoom - Zoom));
+    float yThing = (res.y - CurrentHeight);
+	float newY = uv.y - ((uv.y - 0.5) * (yThing / res.y));
 	
-	if (newY > 1 || newY < 0) {
-		gl_FragColor = vec4(0);
-	} else {
-		gl_FragColor = flixel_texture2D(bitmap, vec2(uv.x, newY));
-	}
+	gl_FragColor = flixel_texture2D(bitmap, vec2(uv.x, newY));
 }
